@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Stunden- & Tätigkeitsbericht</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f0eb;--surface:#fff;--surface2:#f8f6f2;--border:#e0dcd4;--border2:#ccc8c0;
+  --text:#1c1a17;--text2:#6b6760;--text3:#9c9890;
+  --accent:#3d6b8e;--accent2:#b06a2e;--accent-bg:#edf3f8;--accent2-bg:#faf3ea;
+  --success:#3a7d5e;--danger:#c0392b;
+  --r:12px;--rs:8px;--sh:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.06);
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --st:env(safe-area-inset-top,0px);--sbb:env(safe-area-inset-bottom,0px)
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100dvh;font-size:15px;line-height:1.5;overflow-x:hidden}
+input,textarea{font-size:16px!important}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(242,240,235,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:calc(var(--st)+10px) 16px 10px;display:flex;align-items:center;gap:8px}
+.topbar-title{flex:1;font-size:17px;font-weight:600}
+.topbar-title small{display:block;font-size:11px;font-weight:400;color:var(--text2)}
+.btn-icon{width:36px;height:36px;border-radius:50%;border:1px solid var(--border2);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;transition:all .15s}
+.btn-icon:active{transform:scale(.9)}
+
+/* DATE NAV */
+.date-nav{display:flex;align-items:center;padding:10px 12px;gap:6px;background:var(--surface);border-bottom:1px solid var(--border)}
+.dnb{width:44px;height:44px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:22px;flex-shrink:0;user-select:none;transition:all .15s}
+.dnb:active{background:var(--border2);transform:scale(.93)}
+.date-display{flex:1;text-align:center}
+.date-display .dm{font-size:15px;font-weight:600;line-height:1.2}
+.date-display .ds{font-size:11px;color:var(--text2);font-family:var(--mono);margin-top:1px}
+.today-btn{padding:8px 13px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--accent);color:var(--accent);background:var(--accent-bg);cursor:pointer;flex-shrink:0;white-space:nowrap}
+.today-btn:active{background:var(--accent);color:#fff}
+
+/* PAGE TABS */
+.page-tabs-wrap{background:var(--surface);border-bottom:1px solid var(--border);padding:8px 16px 0}
+.page-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.page-tabs::-webkit-scrollbar{display:none}
+.ptab{flex-shrink:0;display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:20px 20px 0 0;font-size:13px;font-weight:500;border:1px solid var(--border2);border-bottom:none;background:var(--surface2);color:var(--text2);cursor:pointer;transition:all .15s;margin-bottom:-1px}
+.ptab.active{background:var(--surface);color:var(--accent);border-color:var(--accent);font-weight:600}
+.ptab.note-tab{color:var(--accent2)}
+.ptab.note-tab.active{border-color:var(--accent2);color:var(--accent2)}
+.ptab-del{width:16px;height:16px;border-radius:50%;background:var(--border2);color:var(--text2);border:none;font-size:11px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font)}
+.ptab-del:hover{background:var(--danger);color:#fff}
+.ptab-add{flex-shrink:0;padding:6px 12px;border-radius:20px 20px 0 0;font-size:12px;border:1px dashed var(--border2);border-bottom:none;background:transparent;color:var(--text3);cursor:pointer;margin-bottom:-1px;white-space:nowrap}
+.ptab-add:active{color:var(--accent)}
+
+/* MAIN */
+.main{padding:0 0 calc(90px + var(--sbb))}
+.sec{padding:10px 16px 0}
+
+/* CARDS */
+.card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;margin-bottom:10px;box-shadow:var(--sh)}
+.ch{padding:9px 14px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);display:flex;align-items:center;gap:7px}
+.cb{padding:12px 14px}
+
+/* ARBEITSORT */
+.ort-row{display:flex;gap:8px}
+.ort-chip{flex:1;padding:11px 10px;border-radius:var(--rs);border:2px solid var(--border2);background:var(--surface2);display:flex;align-items:center;gap:8px;cursor:pointer;transition:all .18s;font-size:14px;font-weight:500}
+.chip-chk{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;transition:all .18s}
+.ort-chip.sb{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+.ort-chip.sm{border-color:var(--accent2);background:var(--accent2-bg);color:var(--accent2)}
+.ort-chip.sb .chip-chk{background:var(--accent);border-color:var(--accent);color:#fff}
+.ort-chip.sm .chip-chk{background:var(--accent2);border-color:var(--accent2);color:#fff}
+
+/* FIELDS */
+.fr{display:flex;gap:8px;margin-bottom:8px}
+.fr:last-child{margin-bottom:0}
+.f{flex:1;min-width:0}
+.f label{display:block;font-size:11px;font-weight:500;color:var(--text2);margin-bottom:4px}
+.f input,.f textarea{width:100%;padding:10px 12px;border:1px solid var(--border2);border-radius:var(--rs);background:var(--surface2);font-family:var(--font);color:var(--text);outline:none;transition:border-color .15s;-webkit-appearance:none}
+.f input:focus,.f textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(61,107,142,.12);background:var(--surface)}
+.f input[type=time],.f input[type=number]{font-family:var(--mono);font-weight:500}
+.f.n{flex:0 0 auto;width:78px}
+.f.n input{text-align:center;padding:10px 4px}
+.f textarea{resize:none;overflow:hidden;min-height:120px;line-height:1.7}
+.gd{display:flex;align-items:center;justify-content:center;height:42px;font-family:var(--mono);font-size:18px;font-weight:500;color:var(--accent)}
+
+/* KOSTEN */
+.kt{border:1px solid var(--border2);border-radius:var(--rs);overflow:hidden}
+.kh{display:grid;grid-template-columns:1fr 100px 32px;background:var(--surface2);border-bottom:1px solid var(--border2);padding:6px 10px;font-size:11px;font-weight:600;color:var(--text2)}
+.kr{display:grid;grid-template-columns:1fr 100px 32px;border-bottom:1px solid var(--border);align-items:center}
+.kr:last-child{border-bottom:none}
+.kr input{border:none;background:transparent;padding:10px;font-family:var(--font);color:var(--text);outline:none;width:100%}
+.kr input:focus{background:var(--accent-bg)}
+.kr input.ba{font-family:var(--mono);text-align:right;padding-right:8px}
+.kr .db{width:32px;height:32px;border:none;background:none;color:var(--text3);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ka{padding:8px 10px;font-size:13px;color:var(--accent);font-weight:500;cursor:pointer;text-align:left;background:none;border:none;width:100%;font-family:var(--font)}
+.ktot-row{display:flex;justify-content:space-between;padding:7px 10px 4px;font-size:12px;color:var(--text2);border-top:1px solid var(--border)}
+.ktot-row strong{color:var(--text);font-family:var(--mono)}
+
+/* NOTE PAGE */
+.note-page{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;margin-bottom:10px;box-shadow:var(--sh)}
+.note-title-bar{padding:10px 14px;background:var(--accent2-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.note-title-bar input{flex:1;border:none;background:transparent;font-family:var(--font);font-size:14px;font-weight:600;color:var(--accent2);outline:none}
+.note-title-bar input::placeholder{color:var(--accent2);opacity:.6}
+.note-area{padding:0;position:relative}
+.note-lines{padding:8px 14px 14px}
+.note-line-input{width:100%;border:none;border-bottom:1px solid var(--border);background:transparent;font-family:var(--font);font-size:14px;color:var(--text);outline:none;padding:9px 0 7px;line-height:1.5;display:block}
+.note-line-input:focus{border-bottom-color:var(--accent);background:rgba(61,107,142,.04)}
+.note-add-line{display:block;width:100%;padding:8px 14px;font-size:13px;color:var(--accent);font-weight:500;cursor:pointer;text-align:left;background:none;border:none;border-top:1px solid var(--border);font-family:var(--font)}
+
+/* SAVE BAR */
+.save-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;padding:10px 16px calc(10px + var(--sbb));background:rgba(242,240,235,.95);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;gap:8px}
+.btn-save{flex:1;padding:14px;background:var(--text);color:#fff;border:none;border-radius:var(--r);font-family:var(--font);font-size:16px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-save:active{transform:scale(.97);opacity:.88}
+.btn-save.saved{background:var(--success)}
+.btn-pdf{padding:14px 18px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s}
+.btn-pdf:active{transform:scale(.97);opacity:.88}
+
+/* MODALS */
+.modal-bg{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);display:flex;align-items:flex-end}
+.modal{background:var(--surface);border-radius:var(--r) var(--r) 0 0;width:100%;padding:20px 20px calc(20px + var(--sbb));max-height:90dvh;overflow-y:auto}
+.modal h2{font-size:17px;font-weight:600;margin-bottom:14px;text-align:center}
+.pdf-opt{border:2px solid var(--border2);border-radius:var(--rs);padding:14px;margin-bottom:10px;cursor:pointer;transition:all .15s}
+.pdf-opt.sel{border-color:var(--accent);background:var(--accent-bg)}
+.pdf-opt .pt{font-size:14px;font-weight:600}
+.pdf-opt .ps{font-size:12px;color:var(--text2);margin-top:2px}
+.modal-btns{display:flex;gap:8px;margin-top:16px}
+.modal-btns button{flex:1;padding:13px;border-radius:var(--r);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;border:none}
+.mbc{background:var(--surface2);color:var(--text2)}
+.mbg{background:var(--accent);color:#fff}
+
+/* PREVIEW */
+.preview-bg{position:fixed;inset:0;z-index:300;background:#555;display:flex;flex-direction:column;overflow:hidden}
+.preview-bar{background:#1c1a17;color:#fff;padding:calc(var(--st)+8px) 12px 8px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.preview-bar-title{flex:1;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preview-bar button{padding:8px 14px;border-radius:20px;border:none;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.pbc{background:rgba(255,255,255,.18);color:#fff}
+.pbp{background:var(--accent);color:#fff}
+.preview-scroll{flex:1;overflow:auto;padding:16px 8px;background:#666}
+
+/* PDF RENDERED PAGES */
+.pdf-page{background:#fff;width:210mm;min-height:297mm;margin:0 auto 16px;padding:12mm;box-shadow:0 4px 24px rgba(0,0,0,.35);border-radius:2px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5pt;color:#1a1a1a;line-height:1.35;overflow:hidden}
+.pdf-h1{font-size:15pt;font-weight:700;margin-bottom:1.5mm}
+.pdf-sub{font-size:7pt;color:#666;margin-bottom:4mm;padding-bottom:3mm;border-bottom:2px solid #1a1a1a}
+.pdf-g2{display:grid;grid-template-columns:1fr 1fr;gap:2.5mm;margin-bottom:2.5mm}
+.pdf-g4{display:grid;grid-template-columns:repeat(4,1fr);gap:2.5mm;margin-bottom:2.5mm}
+.pdf-box{border:1px solid #d8d8d8;border-radius:2px;padding:2mm 3mm}
+.pdf-lbl{font-size:6pt;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:.8mm}
+.pdf-val{font-size:8.5pt;font-weight:600;min-height:4mm;word-break:break-word}
+.pdf-val.mono{font-family:'Courier New',monospace}
+.pdf-tae{border:1px solid #d8d8d8;border-radius:2px;padding:2.5mm 3mm;margin-bottom:2.5mm}
+.pdf-tae .pdf-lbl{margin-bottom:1.5mm}
+.pdf-tae .pdf-val{font-weight:400;white-space:pre-wrap;font-size:8pt;min-height:18mm}
+.pdf-badge{display:inline-block;padding:.5mm 2mm;border-radius:2px;font-size:7pt;font-weight:700}
+.pdf-bb{background:#e8f0f7;color:#3d6b8e}
+.pdf-bm{background:#faf0e6;color:#b06a2e}
+.pdf-table{width:100%;border-collapse:collapse;margin-bottom:2.5mm;table-layout:fixed;font-size:7.5pt}
+.pdf-table th{background:#f0f0ee;font-size:6pt;font-weight:700;padding:1.8mm 2mm;text-align:left;border:1px solid #d8d8d8;text-transform:uppercase;letter-spacing:.3px;overflow:hidden}
+.pdf-table td{font-size:7.5pt;padding:1.8mm 2mm;border:1px solid #d8d8d8;vertical-align:top;overflow:hidden;word-break:break-word}
+.pdf-table td.r{text-align:right;font-family:'Courier New',monospace;white-space:nowrap}
+.pdf-table .sum-row td{font-weight:700;background:#f5f5f3;border-top:1.5px solid #1a1a1a}
+.pdf-table .we-row{background:#fafaf8}
+.pdf-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm;margin-bottom:4mm}
+.pdf-sbox{background:#f5f5f3;border:1px solid #d8d8d8;border-radius:2px;padding:2.5mm 3mm}
+.pdf-sv{font-size:12pt;font-weight:700;font-family:'Courier New',monospace;line-height:1}
+.pdf-sl{font-size:6pt;color:#888;margin-top:1mm}
+.pdf-sig{margin-top:8mm;display:grid;grid-template-columns:1fr 1fr;gap:10mm}
+.pdf-sig-line{border-top:1px solid #aaa;padding-top:2mm;font-size:7pt;color:#888}
+/* NOTE PDF */
+.pdf-note-page{background:#fff;width:210mm;min-height:297mm;margin:0 auto 16px;padding:12mm;box-shadow:0 4px 24px rgba(0,0,0,.35);border-radius:2px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;overflow:hidden}
+.pdf-note-title{font-size:13pt;font-weight:700;color:#b06a2e;margin-bottom:2mm;padding-bottom:2mm;border-bottom:2px solid #b06a2e}
+.pdf-note-sub{font-size:7pt;color:#888;margin-bottom:6mm}
+.pdf-note-line{border-bottom:1px solid #ddd;min-height:9mm;padding:1.5mm 0;font-size:9pt;color:#1a1a1a;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.pdf-note-empty{border-bottom:1px solid #eee;height:9mm}
+
+/* LIST */
+.li{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);padding:13px 14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:var(--sh)}
+.li:active{transform:scale(.99);background:var(--surface2)}
+.lid{width:44px;height:48px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.lid .dn{font-size:20px;font-weight:700;line-height:1;font-family:var(--mono)}
+.lid .dw{font-size:9px;color:var(--text2);font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.lii{flex:1;min-width:0}
+.lii .lt{font-size:14px;font-weight:600;margin-bottom:2px}
+.lii .ls{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bdg{padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;flex-shrink:0}
+.bb{background:var(--accent-bg);color:var(--accent)}
+.bm{background:var(--accent2-bg);color:var(--accent2)}
+.bx{background:#f0ede8;color:var(--text2)}
+.mhdr{padding:14px 16px 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3)}
+
+/* CAL */
+.cal-nav{display:flex;align-items:center;padding:10px 14px;gap:8px;background:var(--surface);border-bottom:1px solid var(--border)}
+.cnb{width:42px;height:42px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:22px;flex-shrink:0;user-select:none;transition:all .15s}
+.cnb:active{background:var(--border2);transform:scale(.93)}
+.cml{flex:1;text-align:center;font-size:17px;font-weight:600}
+.cgrid{padding:10px 14px 4px}
+.cwds{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px}
+.cwd{text-align:center;font-size:11px;font-weight:600;color:var(--text3);padding:4px 0}
+.cdays{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cd{aspect-ratio:1;border-radius:var(--rs);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;border:1.5px solid transparent}
+.cd:active{transform:scale(.9)}
+.cd.emp{pointer-events:none}
+.cd.we{background:var(--surface2)}
+.cd.tod{border-color:var(--accent)}
+.cd.tod .cdn{color:var(--accent);font-weight:700}
+.cd.has{background:var(--accent-bg)}
+.cd.has.we{background:var(--accent2-bg)}
+.cd.sel{background:var(--text)!important;border-color:var(--text)!important}
+.cd.sel .cdn{color:#fff!important}
+.cdn{font-size:15px;font-weight:500;line-height:1}
+.cdd{width:5px;height:5px;border-radius:50%;margin-top:3px}
+.cd.has:not(.sel) .cdd{background:var(--accent)}
+.cd.has.we:not(.sel) .cdd{background:var(--accent2)}
+.cd.sel .cdd{background:rgba(255,255,255,.5)}
+.cinfo{margin:0 14px 8px;padding:12px 14px;background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh)}
+.cit{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.cig{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cst{background:var(--surface2);border-radius:var(--rs);padding:8px 10px;border:1px solid var(--border)}
+.csv{font-size:20px;font-weight:700;font-family:var(--mono);color:var(--text);line-height:1}
+.csl{font-size:11px;color:var(--text2);margin-top:2px}
+.cop{margin:0 14px 10px;padding:12px;text-align:center;background:var(--accent);color:#fff;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer}
+.cop:active{opacity:.85}
+.cmstats{margin:0 14px 14px;padding:12px 14px;background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh)}
+
+.empty{text-align:center;padding:60px 32px;color:var(--text3)}
+.empty .ei{font-size:48px;margin-bottom:16px}
+.empty p{font-size:15px;line-height:1.6}
+
+.toast{position:fixed;top:calc(var(--st)+68px);left:50%;transform:translateX(-50%) translateY(-8px);background:var(--text);color:#fff;padding:10px 20px;border-radius:24px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:all .25s;z-index:9999;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.14)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── PRINT STYLES ── */
+@media print{
+  body>*:not(#print-root){display:none!important}
+  #print-root{display:block!important}
+  #print-root .pdf-page,#print-root .pdf-note-page{
+    box-shadow:none;margin:0;border-radius:0;width:100%;min-height:auto;padding:10mm;
+    page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  #print-root .pdf-page:last-child,#print-root .pdf-note-page:last-child{page-break-after:avoid}
+  @page{size:A4 portrait;margin:0}
+}
+#print-root{display:none}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">Stundenbericht<small id="tsub">Tageserfassung</small></div>
+  <div class="btn-icon" onclick="switchView('cal')">📅</div>
+  <div class="btn-icon" onclick="switchView('list')">📋</div>
+  <div class="btn-icon" onclick="switchView('form')">✏️</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- FORM VIEW -->
+<div id="vf" class="main">
+  <div class="date-nav">
+    <div class="dnb" onclick="changeDay(-1)">‹</div>
+    <div class="date-display"><div class="dm" id="dlbl">—</div><div class="ds" id="dsub">—</div></div>
+    <div class="today-btn" onclick="goToday()">Heute</div>
+    <div class="dnb" onclick="changeDay(+1)">›</div>
+  </div>
+
+  <!-- PAGE TABS -->
+  <div class="page-tabs-wrap">
+    <div class="page-tabs" id="page-tabs"></div>
+  </div>
+
+  <!-- PAGE CONTENT -->
+  <div id="page-content" class="sec"></div>
+</div>
+
+<!-- CAL VIEW -->
+<div id="vc" class="main" style="display:none">
+  <div class="cal-nav">
+    <div class="cnb" onclick="calShift(-1)">‹</div>
+    <div class="cml" id="cml">—</div>
+    <div class="cnb" onclick="calShift(+1)">›</div>
+  </div>
+  <div class="cgrid">
+    <div class="cwds"><div class="cwd">Mo</div><div class="cwd">Di</div><div class="cwd">Mi</div><div class="cwd">Do</div><div class="cwd">Fr</div><div class="cwd" style="color:var(--accent2)">Sa</div><div class="cwd" style="color:var(--accent2)">So</div></div>
+    <div class="cdays" id="cdays"></div>
+  </div>
+  <div id="cdi" style="display:none">
+    <div class="cinfo"><div class="cit" id="cdit">—</div><div class="cig" id="cdig"></div></div>
+    <div class="cop" onclick="openFromCal()">Eintrag öffnen / bearbeiten →</div>
+  </div>
+  <div class="cmstats"><div class="cit">Monatsübersicht</div><div class="cig" id="cmsg"></div></div>
+</div>
+
+<!-- LIST VIEW -->
+<div id="vl" class="main" style="display:none">
+  <div class="sec" style="padding-top:14px" id="lc"></div>
+</div>
+
+<!-- PDF MODAL -->
+<div id="pdf-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closePM()">
+  <div class="modal">
+    <h2>📄 PDF exportieren</h2>
+    <div class="pdf-opt sel" id="po1" onclick="selPO(1)"><div class="pt">📋 Tagesbericht</div><div class="ps">Alle Seiten des aktuellen Tages inkl. Notizseiten</div></div>
+    <div class="pdf-opt" id="po2" onclick="selPO(2)"><div class="pt">📅 Wochenbericht</div><div class="ps">Aktuelle Kalenderwoche – Tabellenübersicht</div></div>
+    <div class="pdf-opt" id="po3" onclick="selPO(3)"><div class="pt">📊 Monatsbericht</div><div class="ps">Aktueller Monat – Gesamtübersicht mit Summen</div></div>
+    <div class="modal-btns">
+      <button class="mbc" onclick="closePM()">Abbrechen</button>
+      <button class="mbg" onclick="openPreview()">Vorschau →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PREVIEW -->
+<div id="preview-bg" class="preview-bg" style="display:none">
+  <div class="preview-bar">
+    <div class="preview-bar-title" id="pvtitle">Vorschau</div>
+    <button class="pbc" onclick="closePreview()">✕ Schließen</button>
+    <button class="pbp" onclick="doPrint()">🖨 Drucken / PDF</button>
+  </div>
+  <div class="preview-scroll" id="pvscroll"></div>
+</div>
+
+<!-- PRINT ROOT – wird nur beim Drucken sichtbar -->
+<div id="print-root"></div>
+
+<!-- SAVE BAR -->
+<div class="save-bar" id="sb">
+  <button class="btn-pdf" onclick="openPM()">📄 PDF</button>
+  <button class="btn-save" id="bs2" onclick="save()">Speichern</button>
+</div>
+
+<script>
+// ── CONSTANTS ──
+const MO=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const MOS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+const DW=['So','Mo','Di','Mi','Do','Fr','Sa'];
+const DF=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+
+// ── DATE UTILS ──
+const d2s=d=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return`${y}-${m}-${dd}`};
+const s2d=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const tod=()=>d2s(new Date());
+const addD=(s,n)=>{const d=s2d(s);d.setDate(d.getDate()+n);return d2s(d)};
+const fFull=s=>{const d=s2d(s);return`${DF[d.getDay()]}, ${d.getDate()}. ${MO[d.getMonth()]} ${d.getFullYear()}`};
+const fSub=s=>{const d=s2d(s);return`KW ${kwOf(d)} · ${doyOf(d)}/365`};
+function kwOf(d){const t=new Date(d);t.setHours(0,0,0,0);t.setDate(t.getDate()+4-(t.getDay()||7));const y=new Date(t.getFullYear(),0,1);return Math.ceil(((t-y)/86400000+1)/7)}
+function doyOf(d){return Math.floor((d-new Date(d.getFullYear(),0,0))/86400000)}
+function mts(t){if(!t)return'—';return t%60?`${Math.floor(t/60)}h ${t%60}m`:`${Math.floor(t/60)}h`}
+function cms(b){if(!b||!b.von||!b.bis)return 0;const[vh,vm]=b.von.split(':').map(Number),[bh,bm]=b.bis.split(':').map(Number);let t=(bh*60+bm)-(vh*60+vm)-(parseInt(b.pau)||0);return t<0?t+1440:t}
+function eur(v){return(+v||0).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'}
+
+// ── STATE ──
+let curView='form', curDate=tod(), curPage=0, calY, calM, calSel=null, pdfOpt=1;
+let pvHTML='';
+
+// ── STORAGE (localStorage) ──
+const SK='sb_data_v4';
+function loadAll(){try{return JSON.parse(localStorage.getItem(SK)||'{}')}catch{return{}}}
+function saveAll(data){try{localStorage.setItem(SK,JSON.stringify(data))}catch(e){console.error('Save failed',e)}}
+function getDay(date){const all=loadAll();return all[date]||null}
+function setDay(date,data){const all=loadAll();all[date]=data;saveAll(all)}
+function getAllDays(){const all=loadAll();return Object.entries(all).map(([date,d])=>({date,...d}))}
+
+// ── PAGE TYPES ──
+const emReport=()=>({type:'report',ort:'',von:'',bis:'',pau:'',proj:'',baus:'',abf:'',ank:'',kmh:'',kmr:'',kmg:'',kfz:'',tae:'',kos:[]});
+const emNote=()=>({type:'note',title:'Notizseite',lines:['','','','','','','','','','']});
+
+// ── DAY DATA ──
+function getDayData(date){
+  const stored=getDay(date);
+  if(stored&&stored.pages&&stored.pages.length>0)return stored;
+  return{pages:[emReport()]};
+}
+
+// ── CURRENT DAY BUFFER ──
+let dayBuffer=null;
+function ensureBuffer(){if(!dayBuffer)dayBuffer=getDayData(curDate)}
+function flushBuffer(){if(dayBuffer)setDay(curDate,dayBuffer)}
+
+// ── NAV ──
+function changeDay(n){flushAndSwitch(()=>{curDate=addD(curDate,n);curPage=0})}
+function goToday(){flushAndSwitch(()=>{curDate=tod();curPage=0})}
+function flushAndSwitch(fn){saveCurrentPage();flushBuffer();dayBuffer=null;fn();loadForm()}
+
+// ── TABS ──
+function renderTabs(){
+  ensureBuffer();
+  const c=document.getElementById('page-tabs');
+  c.innerHTML='';
+  dayBuffer.pages.forEach((p,i)=>{
+    const t=document.createElement('div');
+    t.className='ptab'+(p.type==='note'?' note-tab':'')+(i===curPage?' active':'');
+    const lbl=document.createElement('span');
+    lbl.textContent=p.type==='note'?`📝 Seite ${i+1}`:`📋 Seite ${i+1}`;
+    t.appendChild(lbl);
+    if(i>0){
+      const del=document.createElement('button');
+      del.className='ptab-del';del.textContent='×';del.title='Seite löschen';
+      del.onclick=e=>{e.stopPropagation();deletePage(i)};
+      t.appendChild(del);
+    }
+    t.onclick=()=>{if(i===curPage)return;saveCurrentPage();curPage=i;renderTabs();renderPageContent()};
+    c.appendChild(t);
+  });
+  // Add buttons
+  const addR=document.createElement('div');addR.className='ptab-add';addR.textContent='+ Berichtseite';
+  addR.onclick=()=>addPage('report');c.appendChild(addR);
+  const addN=document.createElement('div');addN.className='ptab-add';addN.textContent='+ Notizseite';
+  addN.onclick=()=>addPage('note');c.appendChild(addN);
+}
+
+function addPage(type){
+  saveCurrentPage();ensureBuffer();
+  dayBuffer.pages.push(type==='note'?emNote():emReport());
+  curPage=dayBuffer.pages.length-1;
+  renderTabs();renderPageContent();
+  toast(type==='note'?'Notizseite hinzugefügt':'Berichtseite hinzugefügt');
+}
+
+function deletePage(i){
+  ensureBuffer();
+  if(dayBuffer.pages.length<=1){toast('Mindestens eine Seite erforderlich');return}
+  if(!confirm(`Seite ${i+1} wirklich löschen?`))return;
+  dayBuffer.pages.splice(i,1);
+  if(curPage>=dayBuffer.pages.length)curPage=dayBuffer.pages.length-1;
+  renderTabs();renderPageContent();
+}
+
+// ── FORM ──
+async function loadForm(){
+  document.getElementById('dlbl').textContent=fFull(curDate);
+  document.getElementById('dsub').textContent=fSub(curDate);
+  ensureBuffer();
+  if(curPage>=dayBuffer.pages.length)curPage=0;
+  renderTabs();
+  renderPageContent();
+}
+
+function renderPageContent(){
+  ensureBuffer();
+  const p=dayBuffer.pages[curPage];
+  if(!p)return;
+  const c=document.getElementById('page-content');
+  if(p.type==='note'){
+    renderNotePage(c,p);
+  } else {
+    renderReportPage(c,p);
+  }
+}
+
+function renderReportPage(c,p){
+  c.innerHTML=`
+  <div class="card"><div class="ch">📍 Arbeitsort</div><div class="cb">
+    <div class="ort-row">
+      <div class="ort-chip" id="cb" onclick="selOrt('buero')"><div class="chip-chk" id="ckb"></div><span>Büro</span></div>
+      <div class="ort-chip" id="cm" onclick="selOrt('montage')"><div class="chip-chk" id="ckm"></div><span>Montage</span></div>
+    </div>
+  </div></div>
+  <div class="card"><div class="ch">🕐 Arbeitszeiten</div><div class="cb">
+    <div class="fr">
+      <div class="f"><label>Von</label><input type="time" id="fv" oninput="calcG()"></div>
+      <div class="f"><label>Bis</label><input type="time" id="fb" oninput="calcG()"></div>
+      <div class="f n"><label>Pause Min</label><input type="number" id="fp" placeholder="30" min="0" oninput="calcG()"></div>
+      <div class="f n"><label>Gesamt</label><div class="gd" id="fg">—</div></div>
+    </div>
+  </div></div>
+  <div class="card"><div class="ch">🏗 Projekt & Einsatzort</div><div class="cb">
+    <div class="fr"><div class="f"><label>Projekt / Auftragsnummer</label><input type="text" id="fpr" placeholder="z.B. AU-2026-042"></div></div>
+    <div class="fr"><div class="f"><label>Einsatzort / Baustelle</label><input type="text" id="fba" placeholder="Adresse oder Bezeichnung"></div></div>
+  </div></div>
+  <div class="card"><div class="ch">🚗 Fahrtweg & Kilometer</div><div class="cb">
+    <div class="fr">
+      <div class="f n"><label>Abfahrt</label><input type="time" id="fab"></div>
+      <div class="f n"><label>Ankunft</label><input type="time" id="fan"></div>
+      <div class="f n"><label>KM Hin</label><input type="number" id="fkh" placeholder="0" min="0" oninput="calcKm()"></div>
+      <div class="f n"><label>KM Rück</label><input type="number" id="fkr" placeholder="0" min="0" oninput="calcKm()"></div>
+      <div class="f n"><label>KM Ges.</label><input type="number" id="fkg" placeholder="0" style="font-family:var(--mono);font-weight:600"></div>
+    </div>
+    <div class="fr"><div class="f"><label>Fahrzeug / KFZ</label><input type="text" id="fkz" placeholder="z.B. M-AB 1234"></div></div>
+  </div></div>
+  <div class="card"><div class="ch">📝 Tätigkeitsbeschreibung</div><div class="cb">
+    <div class="f"><textarea id="fta" placeholder="Beschreibung der ausgeführten Arbeiten …" oninput="autoResize(this)"></textarea></div>
+  </div></div>
+  <div class="card"><div class="ch">💶 Kosten / Auslagen</div><div class="cb" style="padding:0">
+    <div class="kt">
+      <div class="kh"><span>Kostenart / Beschreibung</span><span style="text-align:right;padding-right:8px">Betrag €</span><span></span></div>
+      <div id="kr"></div>
+      <button class="ka" onclick="addKR()">+ Zeile hinzufügen</button>
+    </div>
+    <div class="ktot-row"><span>Gesamt</span><strong id="ktot">0,00 €</strong></div>
+  </div></div>`;
+  // Fill values
+  selOrt(p.ort);
+  sv('fv',p.von);sv('fb',p.bis);sv('fp',p.pau);
+  sv('fpr',p.proj);sv('fba',p.baus);
+  sv('fab',p.abf);sv('fan',p.ank);
+  sv('fkh',p.kmh);sv('fkr',p.kmr);sv('fkg',p.kmg);sv('fkz',p.kfz);
+  const ta=document.getElementById('fta');ta.value=p.tae||'';autoResize(ta);
+  calcG();renderKos(p.kos||[]);
+}
+
+function renderNotePage(c,p){
+  c.innerHTML='';
+  const wrap=document.createElement('div');wrap.className='note-page';
+  const bar=document.createElement('div');bar.className='note-title-bar';
+  const ti=document.createElement('input');
+  ti.type='text';ti.placeholder='Seitentitel eingeben…';ti.value=p.title||'';
+  ti.oninput=()=>p.title=ti.value;
+  bar.appendChild(ti);
+  wrap.appendChild(bar);
+  const area=document.createElement('div');area.className='note-lines';
+  wrap.appendChild(area);
+  const addBtn=document.createElement('button');addBtn.className='note-add-line';addBtn.textContent='+ Zeile hinzufügen';
+  addBtn.onclick=()=>{p.lines.push('');renderNoteLines(area,p,addBtn)};
+  renderNoteLines(area,p,addBtn);
+  wrap.appendChild(addBtn);
+  c.appendChild(wrap);
+}
+
+function renderNoteLines(area,p,addBtn){
+  area.innerHTML='';
+  p.lines.forEach((ln,i)=>{
+    const inp=document.createElement('input');
+    inp.type='text';inp.className='note-line-input';
+    inp.value=ln;inp.placeholder=`Zeile ${i+1}`;
+    inp.oninput=()=>p.lines[i]=inp.value;
+    inp.onkeydown=e=>{
+      if(e.key==='Enter'){e.preventDefault();p.lines.splice(i+1,0,'');renderNoteLines(area,p,addBtn);setTimeout(()=>{const next=area.querySelectorAll('.note-line-input')[i+1];if(next)next.focus()},10)}
+      if(e.key==='Backspace'&&inp.value===''&&p.lines.length>1){e.preventDefault();p.lines.splice(i,1);renderNoteLines(area,p,addBtn);setTimeout(()=>{const prev=area.querySelectorAll('.note-line-input')[Math.max(0,i-1)];if(prev)prev.focus()},10)}
+    };
+    area.appendChild(inp);
+  });
+}
+
+// ── FIELD HELPERS ──
+const sv=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||''};
+const gv=(id)=>{const e=document.getElementById(id);return e?e.value.trim():''};
+
+function autoResize(el){el.style.height='auto';el.style.height=el.scrollHeight+'px'}
+
+let cOrt='';
+function selOrt(v){
+  cOrt=v;
+  ['buero','montage'].forEach(k=>{
+    const chip=document.getElementById(k==='buero'?'cb':'cm');
+    const chk=document.getElementById(k==='buero'?'ckb':'ckm');
+    if(!chip)return;
+    chip.classList.remove('sb','sm');chk.textContent='';
+    if(v===k){chip.classList.add(k==='buero'?'sb':'sm');chk.textContent='✓'}
+  });
+}
+function calcG(){
+  const v=gv('fv'),b=gv('fb'),p=parseInt(gv('fp'))||0,el=document.getElementById('fg');
+  if(!v||!b||!el){return}
+  const[vh,vm]=v.split(':').map(Number),[bh,bm]=b.split(':').map(Number);
+  let t=(bh*60+bm)-(vh*60+vm)-p;if(t<0)t+=1440;
+  el.textContent=mts(t);
+}
+function calcKm(){const h=parseFloat(gv('fkh'))||0,r=parseFloat(gv('fkr'))||0;const el=document.getElementById('fkg');if(el)el.value=h+r||''}
+function renderKos(rows){const kr=document.getElementById('kr');if(!kr)return;kr.innerHTML='';rows.forEach(r=>addKR(r.d,r.b,false));updKT()}
+function addKR(d='',b='',foc=true){
+  const c=document.getElementById('kr');if(!c)return;
+  const r=document.createElement('div');r.className='kr';
+  r.innerHTML=`<input type="text" placeholder="Beschreibung" value="${d}" oninput="updKT()" style="border-right:1px solid var(--border)"><input type="number" class="ba" placeholder="0.00" value="${b}" step="0.01" min="0" oninput="updKT()"><button class="db" onclick="this.closest('.kr').remove();updKT()">×</button>`;
+  c.appendChild(r);if(foc)r.querySelector('input').focus();updKT();
+}
+function colKos(){return[...document.querySelectorAll('#kr .kr')].map(r=>{const i=r.querySelectorAll('input');return{d:i[0].value,b:i[1].value}}).filter(r=>r.d||r.b)}
+function updKT(){const t=[...document.querySelectorAll('#kr .ba')].reduce((s,e)=>s+(parseFloat(e.value)||0),0);const el=document.getElementById('ktot');if(el)el.textContent=eur(t)}
+
+// ── SAVE CURRENT PAGE TO BUFFER ──
+function saveCurrentPage(){
+  ensureBuffer();
+  const p=dayBuffer.pages[curPage];
+  if(!p)return;
+  if(p.type==='report'){
+    p.ort=cOrt;p.von=gv('fv');p.bis=gv('fb');p.pau=gv('fp');
+    p.proj=gv('fpr');p.baus=gv('fba');
+    p.abf=gv('fab');p.ank=gv('fan');
+    p.kmh=gv('fkh');p.kmr=gv('fkr');p.kmg=gv('fkg');p.kfz=gv('fkz');
+    p.tae=gv('fta');p.kos=colKos();
+  }
+  // note page lines saved live via oninput
+}
+
+// ── SAVE BUTTON ──
+async function save(){
+  saveCurrentPage();
+  flushBuffer();
+  const b=document.getElementById('bs2');
+  b.textContent='✓ Gespeichert';b.classList.add('saved');
+  toast('Eintrag gespeichert');
+  setTimeout(()=>{b.textContent='Speichern';b.classList.remove('saved')},2000);
+  if(curView==='cal')renderCal();
+}
+
+// ── PDF ──
+function openPM(){document.getElementById('pdf-modal').style.display='flex'}
+function closePM(){document.getElementById('pdf-modal').style.display='none'}
+function selPO(n){pdfOpt=n;[1,2,3].forEach(i=>document.getElementById('po'+i).classList.toggle('sel',i===n))}
+
+async function openPreview(){
+  closePM();saveCurrentPage();flushBuffer();
+  const all=getAllDays();
+  let title='';
+  if(pdfOpt===1){
+    const rec=getDayData(curDate);
+    pvHTML=buildTagPDF(curDate,rec);
+    title='Tagesbericht – '+fFull(curDate);
+  } else if(pdfOpt===2){
+    pvHTML=buildWochePDF(curDate,all);
+    title='Wochenbericht KW '+kwOf(s2d(curDate));
+  } else {
+    const d=s2d(curDate);
+    pvHTML=buildMonatPDF(curDate,all);
+    title='Monatsbericht '+MO[d.getMonth()]+' '+d.getFullYear();
+  }
+  document.getElementById('pvtitle').textContent=title;
+  document.getElementById('pvscroll').innerHTML=pvHTML;
+  document.getElementById('preview-bg').style.display='flex';
+}
+
+function closePreview(){document.getElementById('preview-bg').style.display='none';document.getElementById('pvscroll').innerHTML=''}
+
+// ── FIX: Drucken über #print-root statt iframe ──
+function doPrint(){
+  // PDF-HTML in das versteckte print-root-Element schreiben
+  const printRoot=document.getElementById('print-root');
+  printRoot.innerHTML=pvHTML;
+
+  // Kurz warten, damit der Browser das DOM rendern kann, dann drucken
+  requestAnimationFrame(()=>{
+    window.print();
+    // Nach dem Drucken aufräumen
+    setTimeout(()=>{printRoot.innerHTML=''},500);
+  });
+}
+
+// ── PDF BUILDERS ──
+function buildTagPDF(date,rec){
+  const pages=rec.pages||[emReport()];
+  return pages.map((p,i)=>{
+    if(p.type==='note') return buildNotePDF(p,i+1,date);
+    return buildReportPDF(p,i+1,pages.length,date);
+  }).join('');
+}
+
+function buildReportPDF(p,pageNum,total,date){
+  const mins=cms(p);
+  const bc=p.ort==='buero'?'pdf-bb':'pdf-bm';
+  const ortL=p.ort==='buero'?'Büro':p.ort==='montage'?'Montage':'—';
+  const koTot=(p.kos||[]).reduce((s,k)=>s+(parseFloat(k.b)||0),0);
+  const koRows=(p.kos||[]).map(k=>`<tr><td style="width:70%">${k.d||'—'}</td><td class="r">${eur(k.b)}</td></tr>`).join('');
+  return`<div class="pdf-page">
+    <div class="pdf-h1">Stunden- &amp; Tätigkeitsbericht</div>
+    <div class="pdf-sub">${fFull(date)}${total>1?`  ·  Seite ${pageNum}/${total}`:''}&ensp;·&ensp;Erstellt: ${new Date().toLocaleDateString('de-DE')}</div>
+    <div class="pdf-g4">
+      <div class="pdf-box"><div class="pdf-lbl">Arbeitsort</div><div class="pdf-val"><span class="pdf-badge ${bc}">${ortL}</span></div></div>
+      <div class="pdf-box"><div class="pdf-lbl">Von – Bis</div><div class="pdf-val mono">${p.von||'—'} – ${p.bis||'—'}</div></div>
+      <div class="pdf-box"><div class="pdf-lbl">Pause</div><div class="pdf-val mono">${p.pau?p.pau+' Min':'—'}</div></div>
+      <div class="pdf-box"><div class="pdf-lbl">Arbeitszeit</div><div class="pdf-val mono">${mts(mins)}</div></div>
+    </div>
+    <div class="pdf-g2">
+      <div class="pdf-box"><div class="pdf-lbl">Projekt / Auftragsnr.</div><div class="pdf-val">${p.proj||'—'}</div></div>
+      <div class="pdf-box"><div class="pdf-lbl">Einsatzort / Baustelle</div><div class="pdf-val">${p.baus||'—'}</div></div>
+    </div>
+    <div class="pdf-g4">
+      <div class="pdf-box"><div class="pdf-lbl">Abfahrt</div><div class="pdf-val mono">${p.abf||'—'}</div></div>
+      <div class="pdf-box"><div class="pdf-lbl">Ankunft</div><div class="pdf-val mono">${p.ank||'—'}</div></div>
+      <div class="pdf-box"><div class="pdf-lbl">KM Gesamt</div><div class="pdf-val mono">${p.kmg?p.kmg+' km':'—'}</div></div>
+      <div class="pdf-box"><div class="pdf-lbl">Fahrzeug / KFZ</div><div class="pdf-val">${p.kfz||'—'}</div></div>
+    </div>
+    <div class="pdf-tae"><div class="pdf-lbl">Tätigkeitsbeschreibung</div><div class="pdf-val">${p.tae||'—'}</div></div>
+    ${p.kos?.length?`<table class="pdf-table"><colgroup><col style="width:70%"><col style="width:30%"></colgroup>
+      <thead><tr><th>Kostenart / Beschreibung</th><th style="text-align:right">Betrag</th></tr></thead>
+      <tbody>${koRows}<tr class="sum-row"><td><strong>Gesamt</strong></td><td class="r"><strong>${eur(koTot)}</strong></td></tr></tbody>
+    </table>`:''}
+    <div class="pdf-sig"><div class="pdf-sig-line">Datum &amp; Unterschrift Mitarbeiter</div><div class="pdf-sig-line">Datum &amp; Unterschrift Vorgesetzter</div></div>
+  </div>`;
+}
+
+function buildNotePDF(p,pageNum,date){
+  const lines=p.lines||[];
+  const filled=lines.map(l=>`<div class="pdf-note-line">${l||''}</div>`).join('');
+  // Fill remaining lines to ~27 lines per page
+  const rem=Math.max(0,27-lines.length);
+  const empty=Array(rem).fill('<div class="pdf-note-empty"></div>').join('');
+  return`<div class="pdf-note-page">
+    <div class="pdf-note-title">${p.title||'Notizseite'}</div>
+    <div class="pdf-note-sub">${fFull(date||curDate)} &ensp;·&ensp; Seite ${pageNum} &ensp;·&ensp; Erstellt: ${new Date().toLocaleDateString('de-DE')}</div>
+    ${filled}${empty}
+  </div>`;
+}
+
+function buildWochePDF(date,all){
+  const d=s2d(date),dow=(d.getDay()+6)%7;
+  const mon=d2s(new Date(d.getFullYear(),d.getMonth(),d.getDate()-dow));
+  const days=Array.from({length:7},(_,i)=>addD(mon,i));
+  const em=Object.fromEntries(all.map(e=>[e.date,e]));
+  let rows='',thMin=0,tKm=0,tKo=0;
+  days.forEach(ds=>{
+    const rec=em[ds];const d2=s2d(ds);
+    const we=d2.getDay()===0||d2.getDay()===6;
+    const rps=(rec?.pages||[]).filter(p=>p.type==='report');
+    const mins=rps.reduce((s,p)=>s+cms(p),0);
+    const km=rps.reduce((s,p)=>s+(parseFloat(p.kmg)||0),0);
+    const ko=rps.reduce((s,p)=>s+(p.kos||[]).reduce((ss,k)=>ss+(parseFloat(k.b)||0),0),0);
+    const ort=[...new Set(rps.map(p=>p.ort).filter(Boolean))].map(o=>o==='buero'?'Büro':'Montage').join('+')||'—';
+    const proj=[...new Set(rps.map(p=>p.proj).filter(Boolean))].join(', ')||'—';
+    const tae=[...new Set(rps.map(p=>p.tae).filter(Boolean))].join(' / ')||'—';
+    thMin+=mins;tKm+=km;tKo+=ko;
+    rows+=`<tr class="${we?'we-row':''}">
+      <td style="white-space:nowrap"><strong>${d2.getDate()}. ${MOS[d2.getMonth()]}</strong><br><span style="font-size:6pt;color:#888">${DF[d2.getDay()]}</span></td>
+      <td>${ort}</td><td>${proj.length>18?proj.slice(0,16)+'…':proj}</td>
+      <td class="r">${mts(mins)}</td><td class="r">${km?km+' km':'—'}</td><td class="r">${ko?eur(ko):'—'}</td>
+      <td style="font-size:7pt">${tae.length>30?tae.slice(0,28)+'…':tae}</td>
+    </tr>`;
+  });
+  return`<div class="pdf-page">
+    <div class="pdf-h1">Wochenbericht – KW ${kwOf(s2d(mon))}</div>
+    <div class="pdf-sub">${fFull(mon)} bis ${fFull(days[6])}&ensp;·&ensp;Erstellt: ${new Date().toLocaleDateString('de-DE')}</div>
+    <div class="pdf-summary">
+      <div class="pdf-sbox"><div class="pdf-sv">${mts(thMin)}</div><div class="pdf-sl">Arbeitsstunden</div></div>
+      <div class="pdf-sbox"><div class="pdf-sv">${tKm?tKm+' km':'—'}</div><div class="pdf-sl">Kilometer</div></div>
+      <div class="pdf-sbox"><div class="pdf-sv">${tKo?eur(tKo):'—'}</div><div class="pdf-sl">Kosten gesamt</div></div>
+    </div>
+    <table class="pdf-table">
+      <colgroup><col style="width:10%"><col style="width:10%"><col style="width:16%"><col style="width:11%"><col style="width:11%"><col style="width:13%"><col style="width:29%"></colgroup>
+      <thead><tr><th>Tag</th><th>Ort</th><th>Projekt</th><th style="text-align:right">Stunden</th><th style="text-align:right">KM</th><th style="text-align:right">Kosten</th><th>Tätigkeit</th></tr></thead>
+      <tbody>${rows}
+      <tr class="sum-row"><td colspan="3"><strong>Gesamt</strong></td>
+        <td class="r"><strong>${mts(thMin)}</strong></td><td class="r"><strong>${tKm?tKm+' km':'—'}</strong></td>
+        <td class="r"><strong>${tKo?eur(tKo):'—'}</strong></td><td></td>
+      </tr></tbody>
+    </table>
+    <div class="pdf-sig" style="margin-top:8mm"><div class="pdf-sig-line">Datum &amp; Unterschrift Mitarbeiter</div><div class="pdf-sig-line">Datum &amp; Unterschrift Vorgesetzter</div></div>
+  </div>`;
+}
+
+function buildMonatPDF(date,all){
+  const d=s2d(date),mk=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  const recs=all.filter(e=>e.date.startsWith(mk)).sort((a,b)=>a.date.localeCompare(b.date));
+  let rows='',thMin=0,tKm=0,tKo=0,tBd=0,tMd=0;
+  recs.forEach(rec=>{
+    const d2=s2d(rec.date);
+    const rps=(rec.pages||[]).filter(p=>p.type==='report');
+    const mins=rps.reduce((s,p)=>s+cms(p),0);
+    const km=rps.reduce((s,p)=>s+(parseFloat(p.kmg)||0),0);
+    const ko=rps.reduce((s,p)=>s+(p.kos||[]).reduce((ss,k)=>ss+(parseFloat(k.b)||0),0),0);
+    const orte=[...new Set(rps.map(p=>p.ort).filter(Boolean))];
+    const ortL=orte.includes('buero')&&orte.includes('montage')?'B+M':orte.map(o=>o==='buero'?'Büro':'Mont.').join(',')||'—';
+    const proj=[...new Set(rps.map(p=>p.proj).filter(Boolean))].join(', ')||'—';
+    const tae=[...new Set(rps.map(p=>p.tae).filter(Boolean))].join(' / ')||'—';
+    thMin+=mins;tKm+=km;tKo+=ko;
+    if(orte.includes('buero'))tBd++;if(orte.includes('montage'))tMd++;
+    rows+=`<tr>
+      <td style="white-space:nowrap">${d2.getDate()}. <span style="font-size:6pt;color:#888">${DF[d2.getDay()].slice(0,2)}</span></td>
+      <td>${ortL}</td><td>${proj.length>16?proj.slice(0,14)+'…':proj}</td>
+      <td class="r">${mts(mins)}</td><td class="r">${km?km+' km':'—'}</td><td class="r">${ko?eur(ko):'—'}</td>
+      <td style="font-size:7pt">${tae.length>32?tae.slice(0,30)+'…':tae}</td>
+    </tr>`;
+  });
+  return`<div class="pdf-page">
+    <div class="pdf-h1">Monatsbericht – ${MO[d.getMonth()]} ${d.getFullYear()}</div>
+    <div class="pdf-sub">Erstellt: ${new Date().toLocaleDateString('de-DE')}</div>
+    <div class="pdf-summary">
+      <div class="pdf-sbox"><div class="pdf-sv">${recs.length}</div><div class="pdf-sl">Einträge</div></div>
+      <div class="pdf-sbox"><div class="pdf-sv">${mts(thMin)}</div><div class="pdf-sl">Arbeitsstunden</div></div>
+      <div class="pdf-sbox"><div class="pdf-sv">${tKm?tKm+' km':'—'}</div><div class="pdf-sl">Kilometer</div></div>
+      <div class="pdf-sbox"><div class="pdf-sv">${tKo?eur(tKo):'—'}</div><div class="pdf-sl">Kosten</div></div>
+      <div class="pdf-sbox"><div class="pdf-sv">${tBd}d</div><div class="pdf-sl">Büro-Tage</div></div>
+      <div class="pdf-sbox"><div class="pdf-sv">${tMd}d</div><div class="pdf-sl">Montage-Tage</div></div>
+    </div>
+    ${recs.length?`<table class="pdf-table">
+      <colgroup><col style="width:9%"><col style="width:9%"><col style="width:14%"><col style="width:11%"><col style="width:11%"><col style="width:13%"><col style="width:33%"></colgroup>
+      <thead><tr><th>Tag</th><th>Ort</th><th>Projekt</th><th style="text-align:right">Stunden</th><th style="text-align:right">KM</th><th style="text-align:right">Kosten</th><th>Tätigkeit</th></tr></thead>
+      <tbody>${rows}
+      <tr class="sum-row"><td colspan="3"><strong>Gesamt</strong></td>
+        <td class="r"><strong>${mts(thMin)}</strong></td><td class="r"><strong>${tKm?tKm+' km':'—'}</strong></td>
+        <td class="r"><strong>${tKo?eur(tKo):'—'}</strong></td><td></td>
+      </tr></tbody>
+    </table>`:`<p style="color:#999;font-style:italic;font-size:8pt;padding:4mm 0">Keine Einträge für diesen Monat.</p>`}
+    <div class="pdf-sig" style="margin-top:8mm"><div class="pdf-sig-line">Datum &amp; Unterschrift Mitarbeiter</div><div class="pdf-sig-line">Datum &amp; Unterschrift Vorgesetzter</div></div>
+  </div>`;
+}
+
+// ── CALENDAR ──
+async function renderCal(){
+  const td=tod(),all=getAllDays();
+  const ed=new Set(all.map(e=>e.date));
+  document.getElementById('cml').textContent=`${MO[calM]} ${calY}`;
+  const dc=document.getElementById('cdays');dc.innerHTML='';
+  const fd=new Date(calY,calM,1),off=(fd.getDay()+6)%7;
+  const dim=new Date(calY,calM+1,0).getDate();
+  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='cd emp';dc.appendChild(e)}
+  for(let dd=1;dd<=dim;dd++){
+    const s=d2s(new Date(calY,calM,dd));
+    const dow=new Date(calY,calM,dd).getDay();
+    const e=document.createElement('div');
+    e.className='cd'+(dow===0||dow===6?' we':'')+(s===td?' tod':'')+(ed.has(s)?' has':'')+(s===calSel?' sel':'');
+    e.innerHTML=`<span class="cdn">${dd}</span><div class="cdd"></div>`;
+    e.onclick=()=>{calSel=s;renderCal()};
+    dc.appendChild(e);
+  }
+  renderMStats(all,calY,calM);
+  if(calSel){const[sy,sm]=calSel.split('-').map(Number);if(sy===calY&&sm-1===calM){const r=all.find(e=>e.date===calSel);showCalInfo(calSel,r)}else document.getElementById('cdi').style.display='none'}
+}
+
+function showCalInfo(s,rec){
+  const el=document.getElementById('cdi'),tl=document.getElementById('cdit'),gl=document.getElementById('cdig');
+  tl.textContent=fFull(s);gl.innerHTML='';
+  const rps=(rec?.pages||[]).filter(p=>p.type==='report');
+  if(!rps.length||!rps[0].von){gl.innerHTML=`<div style="grid-column:1/-1;color:var(--text3);font-size:13px;padding:4px 0">Noch kein Eintrag.</div>`}
+  else{
+    const tkm=rps.reduce((s,p)=>s+(parseFloat(p.kmg)||0),0);
+    const tko=rps.reduce((s,p)=>s+(p.kos||[]).reduce((ss,k)=>ss+(parseFloat(k.b)||0),0),0);
+    const allMin=rps.reduce((s,p)=>s+cms(p),0);
+    const orte=[...new Set(rps.map(p=>p.ort).filter(Boolean))].map(o=>o==='buero'?'Büro':'Montage').join('+')||'—';
+    [[`⏱`,mts(allMin),'Arbeitszeit'],[`📍`,orte,'Einsatzort'],[`🚗`,tkm?tkm+' km':'—','KM'],[`💶`,tko?eur(tko):'—','Kosten']].forEach(([i,v,l])=>{
+      gl.innerHTML+=`<div class="cst"><div class="csv">${i} ${v}</div><div class="csl">${l}</div></div>`;
+    });
+  }
+  el.style.display='';
+}
+
+function renderMStats(all,y,m){
+  const mk=`${y}-${String(m+1).padStart(2,'0')}`;
+  const recs=all.filter(e=>e.date.startsWith(mk));
+  let th=0,tkm=0,tko=0,bd=0,md=0;
+  recs.forEach(rec=>{
+    (rec.pages||[]).filter(p=>p.type==='report').forEach(p=>{
+      th+=cms(p);tkm+=parseFloat(p.kmg)||0;(p.kos||[]).forEach(k=>tko+=parseFloat(k.b)||0);
+    });
+    const orte=(rec.pages||[]).filter(p=>p.type==='report').map(p=>p.ort).filter(Boolean);
+    if(orte.includes('buero'))bd++;if(orte.includes('montage'))md++;
+  });
+  document.getElementById('cmsg').innerHTML=`
+    <div class="cst"><div class="csv">${recs.length}</div><div class="csl">Einträge</div></div>
+    <div class="cst"><div class="csv">${mts(th)}</div><div class="csl">Arbeitsstunden</div></div>
+    <div class="cst"><div class="csv">${tkm} km</div><div class="csl">Kilometer</div></div>
+    <div class="cst"><div class="csv">${eur(tko)}</div><div class="csl">Kosten</div></div>
+    <div class="cst"><div class="csv">${bd}d</div><div class="csl">Büro-Tage</div></div>
+    <div class="cst"><div class="csv">${md}d</div><div class="csl">Montage-Tage</div></div>`;
+}
+
+function calShift(n){calM+=n;if(calM>11){calM=0;calY++}if(calM<0){calM=11;calY--}renderCal()}
+function openFromCal(){if(!calSel)return;saveCurrentPage();flushBuffer();dayBuffer=null;curDate=calSel;curPage=0;switchView('form')}
+
+// ── LIST ──
+async function renderList(){
+  const all=getAllDays(),c=document.getElementById('lc');
+  if(!all.length){c.innerHTML=`<div class="empty"><div class="ei">📂</div><p>Noch keine Einträge.<br>Tippe auf ✏️ um loszulegen.</p></div>`;return}
+  all.sort((a,b)=>b.date.localeCompare(a.date));
+  const g={};all.forEach(r=>{const k=r.date.slice(0,7);if(!g[k])g[k]=[];g[k].push(r)});
+  c.innerHTML='';
+  for(const[mk,recs]of Object.entries(g)){
+    const[y,m]=mk.split('-').map(Number);
+    const h=document.createElement('div');h.className='mhdr';h.textContent=`${MO[m-1]} ${y}`;c.appendChild(h);
+    recs.forEach(rec=>{
+      const d=s2d(rec.date);
+      const rps=(rec.pages||[]).filter(p=>p.type==='report');
+      const rp0=rps[0]||{};
+      const orte=[...new Set(rps.map(p=>p.ort).filter(Boolean))];
+      let bc='',bt='';
+      if(orte.includes('buero')&&orte.includes('montage')){bc='bx';bt='Büro+Mont.'}
+      else if(orte.includes('buero')){bc='bb';bt='Büro'}
+      else if(orte.includes('montage')){bc='bm';bt='Montage'}
+      const sub=[];
+      if(rp0.von&&rp0.bis)sub.push(`${rp0.von}–${rp0.bis}`);
+      if(rp0.proj)sub.push(rp0.proj);
+      if(rp0.baus)sub.push(rp0.baus);
+      const totalPages=(rec.pages||[]).length;
+      if(totalPages>1)sub.push(`${totalPages} Seiten`);
+      const item=document.createElement('div');item.className='li';
+      item.innerHTML=`<div class="lid"><div class="dn">${d.getDate()}</div><div class="dw">${DW[d.getDay()]}</div></div>
+        <div class="lii"><div class="lt">${DF[d.getDay()]}, ${d.getDate()}. ${MO[d.getMonth()]}</div><div class="ls">${sub.join(' · ')||'Kein Eintrag'}</div></div>
+        ${bt?`<div class="bdg ${bc}">${bt}</div>`:''}`;
+      item.onclick=()=>{saveCurrentPage();flushBuffer();dayBuffer=null;curDate=rec.date;curPage=0;switchView('form')};
+      c.appendChild(item);
+    });
+  }
+}
+
+// ── SWITCH VIEW ──
+function switchView(v){
+  curView=v;
+  document.getElementById('vf').style.display=v==='form'?'':'none';
+  document.getElementById('vc').style.display=v==='cal'?'':'none';
+  document.getElementById('vl').style.display=v==='list'?'':'none';
+  document.getElementById('sb').style.display=v==='form'?'':'none';
+  document.getElementById('tsub').textContent=v==='form'?'Tageserfassung':v==='cal'?'Kalenderübersicht':'Alle Einträge';
+  if(v==='list')renderList();
+  if(v==='form')loadForm();
+  if(v==='cal')renderCal();
+}
+
+// ── TOAST ──
+let tt;
+function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2400)}
+
+// ── INIT ──
+(function init(){
+  curDate=tod();
+  const n=new Date();calY=n.getFullYear();calM=n.getMonth();calSel=curDate;
+  switchView('form');
+})();
+</script>
+</body>
+</html>
