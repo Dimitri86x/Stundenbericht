@@ -24,6 +24,10 @@ input,textarea{font-size:16px!important}
 .topbar-title small{display:block;font-size:11px;font-weight:400;color:var(--text2)}
 .btn-icon{width:36px;height:36px;border-radius:50%;border:1px solid var(--border2);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;transition:all .15s}
 .btn-icon:active{transform:scale(.9)}
+.sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:background .3s}
+.sync-dot.online{background:var(--success)}.sync-dot.offline{background:var(--danger)}.sync-dot.syncing{background:#e6a817;animation:pulse .8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.user-avatar{width:32px;height:32px;border-radius:50%;border:2px solid var(--border2);cursor:pointer;object-fit:cover;flex-shrink:0}
 .date-nav{display:flex;align-items:center;padding:10px 12px;gap:6px;background:var(--surface);border-bottom:1px solid var(--border)}
 .dnb{width:44px;height:44px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:22px;flex-shrink:0;user-select:none;transition:all .15s}
 .dnb:active{background:var(--border2);transform:scale(.93)}
@@ -62,8 +66,6 @@ input,textarea{font-size:16px!important}
 .f.n{flex:0 0 auto;width:78px}.f.n input{text-align:center;padding:10px 4px}
 .f textarea{resize:none;overflow:hidden;min-height:120px;line-height:1.7}
 .gd{display:flex;align-items:center;justify-content:center;height:42px;font-family:var(--mono);font-size:18px;font-weight:500;color:var(--accent)}
-
-/* FAHRTEN */
 .fahrt-item{border:1px solid var(--border2);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;background:var(--surface2);position:relative}
 .fahrt-num{position:absolute;top:8px;left:10px;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
 .fahrt-del{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:1px solid var(--border2);background:var(--surface);color:var(--text3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--font);transition:all .15s}
@@ -72,7 +74,6 @@ input,textarea{font-size:16px!important}
 .fahrt-total{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--accent-bg);border-radius:var(--rs);border:1px solid rgba(61,107,142,.2);margin-top:4px}
 .fahrt-total-label{font-size:12px;font-weight:600;color:var(--accent)}
 .fahrt-total-val{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--accent)}
-
 .kt{border:1px solid var(--border2);border-radius:var(--rs);overflow:hidden}
 .kh{display:grid;grid-template-columns:1fr 100px 32px;background:var(--surface2);border-bottom:1px solid var(--border2);padding:6px 10px;font-size:11px;font-weight:600;color:var(--text2)}
 .kr{display:grid;grid-template-columns:1fr 100px 32px;border-bottom:1px solid var(--border);align-items:center}
@@ -126,7 +127,7 @@ input,textarea{font-size:16px!important}
 .pdf-badge{display:inline-block;padding:.5mm 2mm;border-radius:2px;font-size:7pt;font-weight:700}
 .pdf-bb{background:#e8f0f7;color:#3d6b8e}.pdf-bm{background:#faf0e6;color:#b06a2e}
 .pdf-table{width:100%;border-collapse:collapse;margin-bottom:2.5mm;table-layout:fixed;font-size:7.5pt}
-.pdf-table th{background:#f0f0ee;font-size:6pt;font-weight:700;padding:1.8mm 2mm;text-align:left;border:1px solid #d8d8d8;text-transform:uppercase;letter-spacing:.3px;overflow:hidden}
+.pdf-table th{background:#f0f0ee;font-size:6pt;font-weight:700;padding:1.8mm 2mm;text-align:left;border:1px solid #d8d8d8;text-transform:uppercase;letter-spacing:.3px}
 .pdf-table td{font-size:7.5pt;padding:1.8mm 2mm;border:1px solid #d8d8d8;vertical-align:top;overflow:hidden;word-break:break-word}
 .pdf-table td.r{text-align:right;font-family:'Courier New',monospace;white-space:nowrap}
 .pdf-table .sum-row td{font-weight:700;background:#f5f5f3;border-top:1.5px solid #1a1a1a}
@@ -145,10 +146,8 @@ input,textarea{font-size:16px!important}
 .li{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);padding:13px 14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:var(--sh)}
 .li:active{transform:scale(.99);background:var(--surface2)}
 .lid{width:44px;height:48px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
-.lid .dn{font-size:20px;font-weight:700;line-height:1;font-family:var(--mono)}
-.lid .dw{font-size:9px;color:var(--text2);font-weight:600;letter-spacing:.5px;text-transform:uppercase}
-.lii{flex:1;min-width:0}.lii .lt{font-size:14px;font-weight:600;margin-bottom:2px}
-.lii .ls{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lid .dn{font-size:20px;font-weight:700;line-height:1;font-family:var(--mono)}.lid .dw{font-size:9px;color:var(--text2);font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.lii{flex:1;min-width:0}.lii .lt{font-size:14px;font-weight:600;margin-bottom:2px}.lii .ls{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bdg{padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;flex-shrink:0}
 .bb{background:var(--accent-bg);color:var(--accent)}.bm{background:var(--accent2-bg);color:var(--accent2)}.bx{background:#f0ede8;color:var(--text2)}
 .mhdr{padding:14px 16px 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3)}
@@ -174,12 +173,31 @@ input,textarea{font-size:16px!important}
 .cst{background:var(--surface2);border-radius:var(--rs);padding:8px 10px;border:1px solid var(--border)}
 .csv{font-size:20px;font-weight:700;font-family:var(--mono);color:var(--text);line-height:1}
 .csl{font-size:11px;color:var(--text2);margin-top:2px}
-.cop{margin:0 14px 10px;padding:12px;text-align:center;background:var(--accent);color:#fff;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer}
-.cop:active{opacity:.85}
+.cop{margin:0 14px 10px;padding:12px;text-align:center;background:var(--accent);color:#fff;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer}.cop:active{opacity:.85}
 .cmstats{margin:0 14px 14px;padding:12px 14px;background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh)}
 .empty{text-align:center;padding:60px 32px;color:var(--text3)}.empty .ei{font-size:48px;margin-bottom:16px}.empty p{font-size:15px;line-height:1.6}
 .toast{position:fixed;top:calc(var(--st)+68px);left:50%;transform:translateX(-50%) translateY(-8px);background:var(--text);color:#fff;padding:10px 20px;border-radius:24px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:all .25s;z-index:9999;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.14)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* LOGIN OVERLAY */
+.login-overlay{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;padding:32px}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:40px 32px;max-width:380px;width:100%;text-align:center;box-shadow:var(--sh)}
+.login-box h1{font-size:22px;font-weight:700;margin-bottom:4px}
+.login-box p{font-size:14px;color:var(--text2);margin-bottom:24px}
+.login-box .login-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;background:#fff;border:2px solid var(--border2);border-radius:var(--r);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text)}
+.login-box .login-btn:hover{border-color:var(--accent);background:var(--accent-bg)}
+.login-box .login-btn:active{transform:scale(.97)}
+.login-box .login-btn img{width:20px;height:20px}
+.login-box .login-note{font-size:11px;color:var(--text3);margin-top:16px;line-height:1.5}
+
+/* USER MENU */
+.user-menu{position:fixed;top:calc(var(--st)+52px);right:16px;z-index:150;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;box-shadow:0 8px 32px rgba(0,0,0,.15);min-width:220px;display:none}
+.user-menu.show{display:block}
+.um-name{font-size:14px;font-weight:600;margin-bottom:2px}
+.um-email{font-size:12px;color:var(--text2);margin-bottom:12px;word-break:break-all}
+.um-btn{width:100%;padding:10px;border:1px solid var(--border2);border-radius:var(--rs);background:var(--surface2);font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;text-align:center;transition:all .15s;color:var(--text)}
+.um-btn:hover{border-color:var(--danger);color:var(--danger)}
+
 @media print{
   body>*:not(#print-root){display:none!important}
   #print-root{display:block!important}
@@ -191,36 +209,50 @@ input,textarea{font-size:16px!important}
 </style>
 </head>
 <body>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-box">
+    <h1>📋 Stundenbericht</h1>
+    <p>Melde dich an, um deine Daten auf allen Geräten zu synchronisieren.</p>
+    <button class="login-btn" onclick="doLogin()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G">
+      Mit Google anmelden
+    </button>
+    <div class="login-note">Deine Daten werden verschlüsselt in deinem persönlichen Firebase-Konto gespeichert.</div>
+  </div>
+</div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="user-menu">
+  <div class="um-name" id="um-name">—</div>
+  <div class="um-email" id="um-email">—</div>
+  <button class="um-btn" onclick="doLogout()">Abmelden</button>
+</div>
+
 <div class="topbar">
   <div class="topbar-title">Stundenbericht<small id="tsub">Tageserfassung</small></div>
+  <div class="sync-dot offline" id="sync-dot" title="Sync-Status"></div>
   <div class="btn-icon" onclick="switchView('cal')">📅</div>
   <div class="btn-icon" onclick="switchView('list')">📋</div>
   <div class="btn-icon" onclick="switchView('form')">✏️</div>
+  <img class="user-avatar" id="user-avatar" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='16' fill='%23ccc8c0'/><text x='16' y='21' text-anchor='middle' font-size='16' fill='%23fff'>?</text></svg>" onclick="toggleUserMenu()">
 </div>
 <div class="toast" id="toast"></div>
 <div id="vf" class="main">
-  <div class="date-nav">
-    <div class="dnb" onclick="changeDay(-1)">‹</div>
-    <div class="date-display"><div class="dm" id="dlbl">—</div><div class="ds" id="dsub">—</div></div>
-    <div class="today-btn" onclick="goToday()">Heute</div>
-    <div class="dnb" onclick="changeDay(+1)">›</div>
-  </div>
+  <div class="date-nav"><div class="dnb" onclick="changeDay(-1)">‹</div><div class="date-display"><div class="dm" id="dlbl">—</div><div class="ds" id="dsub">—</div></div><div class="today-btn" onclick="goToday()">Heute</div><div class="dnb" onclick="changeDay(+1)">›</div></div>
   <div class="page-tabs-wrap"><div class="page-tabs" id="page-tabs"></div></div>
   <div id="page-content" class="sec"></div>
 </div>
 <div id="vc" class="main" style="display:none">
   <div class="cal-nav"><div class="cnb" onclick="calShift(-1)">‹</div><div class="cml" id="cml">—</div><div class="cnb" onclick="calShift(+1)">›</div></div>
-  <div class="cgrid">
-    <div class="cwds"><div class="cwd">Mo</div><div class="cwd">Di</div><div class="cwd">Mi</div><div class="cwd">Do</div><div class="cwd">Fr</div><div class="cwd" style="color:var(--accent2)">Sa</div><div class="cwd" style="color:var(--accent2)">So</div></div>
-    <div class="cdays" id="cdays"></div>
-  </div>
+  <div class="cgrid"><div class="cwds"><div class="cwd">Mo</div><div class="cwd">Di</div><div class="cwd">Mi</div><div class="cwd">Do</div><div class="cwd">Fr</div><div class="cwd" style="color:var(--accent2)">Sa</div><div class="cwd" style="color:var(--accent2)">So</div></div><div class="cdays" id="cdays"></div></div>
   <div id="cdi" style="display:none"><div class="cinfo"><div class="cit" id="cdit">—</div><div class="cig" id="cdig"></div></div><div class="cop" onclick="openFromCal()">Eintrag öffnen / bearbeiten →</div></div>
   <div class="cmstats"><div class="cit">Monatsübersicht</div><div class="cig" id="cmsg"></div></div>
 </div>
 <div id="vl" class="main" style="display:none"><div class="sec" style="padding-top:14px" id="lc"></div></div>
 <div id="pdf-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closePM()">
-  <div class="modal">
-    <h2>📄 PDF exportieren</h2>
+  <div class="modal"><h2>📄 PDF exportieren</h2>
     <div class="pdf-opt sel" id="po1" onclick="selPO(1)"><div class="pt">📋 Tagesbericht</div><div class="ps">Alle Seiten des aktuellen Tages inkl. Notizseiten</div></div>
     <div class="pdf-opt" id="po2" onclick="selPO(2)"><div class="pt">📅 Wochenbericht</div><div class="ps">Aktuelle Kalenderwoche – Tabellenübersicht</div></div>
     <div class="pdf-opt" id="po3" onclick="selPO(3)"><div class="pt">📊 Monatsbericht</div><div class="ps">Aktueller Monat – Gesamtübersicht mit Summen</div></div>
@@ -234,7 +266,98 @@ input,textarea{font-size:16px!important}
 <div id="print-root"></div>
 <div class="save-bar" id="sb"><button class="btn-pdf" onclick="openPM()">📄 PDF</button><button class="btn-save" id="bs2" onclick="save()">Speichern</button></div>
 
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- FIREBASE SDK -->
+<!-- ═══════════════════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 <script>
+// ╔═══════════════════════════════════════════════════╗
+// ║  🔥 FIREBASE CONFIG – HIER DEINE DATEN EINTRAGEN ║
+// ╚═══════════════════════════════════════════════════╝
+const firebaseConfig = {
+  apiKey: "AIzaSyCuMC6UTLDoF1Ptes6xWqJ75hZFljJvRJE",
+  authDomain: "stundennachweis-f1800.firebaseapp.com",
+  databaseURL: "https://stundennachweis-f1800-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "stundennachweis-f1800",
+  storageBucket: "stundennachweis-f1800.firebasestorage.app",
+  messagingSenderId: "494753801835",
+  appId: "1:494753801835:web:37a8e37344abb3f6c4732e"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+let dbRef = null; // set after login
+let fbData = {};  // local mirror of firebase data
+let fbReady = false;
+let currentUser = null;
+
+// ── AUTH ──
+function doLogin(){
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(e=>{
+    // Fallback for mobile: use redirect
+    if(e.code==='auth/popup-blocked'||e.code==='auth/popup-closed-by-user'){
+      auth.signInWithRedirect(provider);
+    } else {
+      toast('Anmeldung fehlgeschlagen');
+      console.error(e);
+    }
+  });
+}
+function doLogout(){
+  auth.signOut();
+  document.getElementById('user-menu').classList.remove('show');
+}
+function toggleUserMenu(){
+  document.getElementById('user-menu').classList.toggle('show');
+}
+// Close menu on outside click
+document.addEventListener('click',e=>{
+  const menu=document.getElementById('user-menu'),avatar=document.getElementById('user-avatar');
+  if(!menu.contains(e.target)&&e.target!==avatar) menu.classList.remove('show');
+});
+
+auth.onAuthStateChanged(user=>{
+  currentUser=user;
+  if(user){
+    document.getElementById('login-overlay').style.display='none';
+    document.getElementById('user-avatar').src=user.photoURL||'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="%233d6b8e"/><text x="16" y="21" text-anchor="middle" font-size="14" fill="%23fff">'+user.displayName?.charAt(0)?.toUpperCase()+'</text></svg>';
+    document.getElementById('um-name').textContent=user.displayName||'Benutzer';
+    document.getElementById('um-email').textContent=user.email||'';
+    // Setup realtime database listener
+    dbRef=db.ref('users/'+user.uid+'/days');
+    setSyncStatus('syncing');
+    dbRef.on('value',snap=>{
+      fbData=snap.val()||{};
+      // Also update localStorage as cache
+      try{localStorage.setItem(SK,JSON.stringify(fbData))}catch(e){}
+      fbReady=true;
+      setSyncStatus('online');
+      // Refresh current view
+      dayBuffer=null;
+      if(curView==='form')loadForm();
+      else if(curView==='cal')renderCal();
+      else if(curView==='list')renderList();
+    });
+  } else {
+    document.getElementById('login-overlay').style.display='flex';
+    if(dbRef){dbRef.off();dbRef=null}
+    fbData={};fbReady=false;
+    setSyncStatus('offline');
+  }
+});
+
+function setSyncStatus(s){
+  const dot=document.getElementById('sync-dot');
+  dot.className='sync-dot '+s;
+  dot.title=s==='online'?'Synchronisiert':s==='syncing'?'Synchronisiere…':'Offline';
+}
+
+// ── CONSTANTS ──
 const MO=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const MOS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
 const DW=['So','Mo','Di','Mi','Do','Fr','Sa'];
@@ -250,17 +373,39 @@ function doyOf(d){return Math.floor((d-new Date(d.getFullYear(),0,0))/86400000)}
 function mts(t){if(!t)return'—';return t%60?`${Math.floor(t/60)}h ${t%60}m`:`${Math.floor(t/60)}h`}
 function cms(b){if(!b||!b.von||!b.bis)return 0;const[vh,vm]=b.von.split(':').map(Number),[bh,bm]=b.bis.split(':').map(Number);let t=(bh*60+bm)-(vh*60+vm)-(parseInt(b.pau)||0);return t<0?t+1440:t}
 function eur(v){return(+v||0).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'}
-function getPageKm(p){
-  if(p.fahrten&&p.fahrten.length)return p.fahrten.reduce((s,f)=>s+(parseFloat(f.km)||0),0);
-  return parseFloat(p.kmg)||0;
-}
+function getPageKm(p){if(p.fahrten&&p.fahrten.length)return p.fahrten.reduce((s,f)=>s+(parseFloat(f.km)||0),0);return parseFloat(p.kmg)||0}
 
 let curView='form',curDate=tod(),curPage=0,calY,calM,calSel=null,pdfOpt=1,pvHTML='';
+
+// ── STORAGE: Firebase + localStorage cache ──
 const SK='sb_data_v4';
-function loadAll(){try{return JSON.parse(localStorage.getItem(SK)||'{}')}catch{return{}}}
-function saveAll(data){try{localStorage.setItem(SK,JSON.stringify(data))}catch(e){console.error('Save failed',e)}}
+function loadAll(){
+  if(fbReady)return JSON.parse(JSON.stringify(fbData));
+  try{return JSON.parse(localStorage.getItem(SK)||'{}')}catch{return{}}
+}
+function saveAll(data){
+  // Save to localStorage cache
+  try{localStorage.setItem(SK,JSON.stringify(data))}catch(e){}
+  // Save to Firebase
+  if(dbRef&&currentUser){
+    setSyncStatus('syncing');
+    dbRef.set(data).then(()=>setSyncStatus('online')).catch(e=>{console.error('Firebase save error',e);setSyncStatus('offline')});
+  }
+}
 function getDay(date){return loadAll()[date]||null}
-function setDay(date,data){const all=loadAll();all[date]=data;saveAll(all)}
+function setDay(date,data){
+  const all=loadAll();
+  all[date]=data;
+  // Update local mirror
+  fbData=all;
+  // Save to localStorage
+  try{localStorage.setItem(SK,JSON.stringify(all))}catch(e){}
+  // Save only this day to Firebase (more efficient)
+  if(dbRef&&currentUser){
+    setSyncStatus('syncing');
+    dbRef.child(date).set(data).then(()=>setSyncStatus('online')).catch(e=>{console.error(e);setSyncStatus('offline')});
+  }
+}
 function getAllDays(){return Object.entries(loadAll()).map(([date,d])=>({date,...d}))}
 
 const emFahrt=()=>({von:'',nach:'',abf:'',ank:'',km:'',kfz:''});
@@ -278,12 +423,7 @@ function migrateReport(p){
   }
   return p;
 }
-
-function getDayData(date){
-  const stored=getDay(date);
-  if(stored&&stored.pages&&stored.pages.length>0){stored.pages=stored.pages.map(migrateReport);return stored}
-  return{pages:[emReport()]};
-}
+function getDayData(date){const stored=getDay(date);if(stored&&stored.pages&&stored.pages.length>0){stored.pages=stored.pages.map(migrateReport);return stored}return{pages:[emReport()]}}
 
 let dayBuffer=null;
 function ensureBuffer(){if(!dayBuffer)dayBuffer=getDayData(curDate)}
@@ -340,34 +480,16 @@ function renderReportPage(c,p){
     </div><div class="ktot-row"><span>Gesamt</span><strong id="ktot">0,00 €</strong></div>
   </div></div>`;
   selOrt(p.ort);sv('fv',p.von);sv('fb',p.bis);sv('fp',p.pau);sv('fpr',p.proj);sv('fba',p.baus);
-  const ta=document.getElementById('fta');ta.value=p.tae||'';autoResize(ta);
-  calcG();renderFahrten(p.fahrten||[emFahrt()]);renderKos(p.kos||[]);
+  const ta=document.getElementById('fta');ta.value=p.tae||'';autoResize(ta);calcG();renderFahrten(p.fahrten||[emFahrt()]);renderKos(p.kos||[]);
 }
 
-// ── FAHRTEN UI ──
 function renderFahrten(fahrten){
   const list=document.getElementById('fahrten-list');if(!list)return;list.innerHTML='';
   fahrten.forEach((f,i)=>{
     const item=document.createElement('div');item.className='fahrt-item';item.dataset.idx=i;
-    const canDel=fahrten.length>1;
-    item.innerHTML=`
-      <div class="fahrt-num">Fahrt ${i+1}</div>
-      ${canDel?`<button class="fahrt-del" onclick="delFahrt(${i})" title="Fahrt löschen">×</button>`:''}
-      <div class="fahrt-fields">
-        <div class="fr">
-          <div class="f"><label>Von (Startort)</label><input type="text" class="fv-von" value="${esc(f.von)}" placeholder="z.B. Büro / Firma"></div>
-          <div class="f"><label>Nach (Ziel)</label><input type="text" class="fv-nach" value="${esc(f.nach)}" placeholder="z.B. Baustelle XY"></div>
-        </div>
-        <div class="fr">
-          <div class="f n"><label>Abfahrt</label><input type="time" class="fv-abf" value="${f.abf||''}"></div>
-          <div class="f n"><label>Ankunft</label><input type="time" class="fv-ank" value="${f.ank||''}"></div>
-          <div class="f n"><label>KM</label><input type="number" class="fv-km" value="${f.km||''}" placeholder="0" min="0" oninput="calcFahrtenTotal()"></div>
-          <div class="f"><label>Fahrzeug</label><input type="text" class="fv-kfz" value="${esc(f.kfz)}" placeholder="z.B. M-AB 1234"></div>
-        </div>
-      </div>`;
+    item.innerHTML=`<div class="fahrt-num">Fahrt ${i+1}</div>${fahrten.length>1?`<button class="fahrt-del" onclick="delFahrt(${i})">×</button>`:''}<div class="fahrt-fields"><div class="fr"><div class="f"><label>Von (Startort)</label><input type="text" class="fv-von" value="${esc(f.von)}" placeholder="z.B. Büro / Firma"></div><div class="f"><label>Nach (Ziel)</label><input type="text" class="fv-nach" value="${esc(f.nach)}" placeholder="z.B. Baustelle XY"></div></div><div class="fr"><div class="f n"><label>Abfahrt</label><input type="time" class="fv-abf" value="${f.abf||''}"></div><div class="f n"><label>Ankunft</label><input type="time" class="fv-ank" value="${f.ank||''}"></div><div class="f n"><label>KM</label><input type="number" class="fv-km" value="${f.km||''}" placeholder="0" min="0" oninput="calcFahrtenTotal()"></div><div class="f"><label>Fahrzeug</label><input type="text" class="fv-kfz" value="${esc(f.kfz)}" placeholder="z.B. M-AB 1234"></div></div></div>`;
     list.appendChild(item);
-  });
-  calcFahrtenTotal();
+  });calcFahrtenTotal();
 }
 function esc(s){return(s||'').replace(/"/g,'&quot;')}
 function addFahrt(){saveCurrentPage();ensureBuffer();const p=dayBuffer.pages[curPage];if(!p||p.type!=='report')return;if(!p.fahrten)p.fahrten=[];p.fahrten.push(emFahrt());renderFahrten(p.fahrten);const list=document.getElementById('fahrten-list');if(list&&list.lastChild)list.lastChild.scrollIntoView({behavior:'smooth',block:'nearest'});toast('Fahrt hinzugefügt')}
@@ -380,17 +502,10 @@ function renderNotePage(c,p){
   const bar=document.createElement('div');bar.className='note-title-bar';
   const ti=document.createElement('input');ti.type='text';ti.placeholder='Seitentitel eingeben…';ti.value=p.title||'';ti.oninput=()=>p.title=ti.value;bar.appendChild(ti);wrap.appendChild(bar);
   const area=document.createElement('div');area.className='note-lines';wrap.appendChild(area);
-  const addBtn=document.createElement('button');addBtn.className='note-add-line';addBtn.textContent='+ Zeile hinzufügen';addBtn.onclick=()=>{p.lines.push('');renderNoteLines(area,p,addBtn)};
-  renderNoteLines(area,p,addBtn);wrap.appendChild(addBtn);c.appendChild(wrap);
+  const addBtn=document.createElement('button');addBtn.className='note-add-line';addBtn.textContent='+ Zeile hinzufügen';addBtn.onclick=()=>{p.lines.push('');renderNoteLines(area,p)};
+  renderNoteLines(area,p);wrap.appendChild(addBtn);c.appendChild(wrap);
 }
-function renderNoteLines(area,p){
-  area.innerHTML='';p.lines.forEach((ln,i)=>{
-    const inp=document.createElement('input');inp.type='text';inp.className='note-line-input';inp.value=ln;inp.placeholder=`Zeile ${i+1}`;
-    inp.oninput=()=>p.lines[i]=inp.value;
-    inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();p.lines.splice(i+1,0,'');renderNoteLines(area,p);setTimeout(()=>{const next=area.querySelectorAll('.note-line-input')[i+1];if(next)next.focus()},10)}if(e.key==='Backspace'&&inp.value===''&&p.lines.length>1){e.preventDefault();p.lines.splice(i,1);renderNoteLines(area,p);setTimeout(()=>{const prev=area.querySelectorAll('.note-line-input')[Math.max(0,i-1)];if(prev)prev.focus()},10)}};
-    area.appendChild(inp);
-  });
-}
+function renderNoteLines(area,p){area.innerHTML='';p.lines.forEach((ln,i)=>{const inp=document.createElement('input');inp.type='text';inp.className='note-line-input';inp.value=ln;inp.placeholder=`Zeile ${i+1}`;inp.oninput=()=>p.lines[i]=inp.value;inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();p.lines.splice(i+1,0,'');renderNoteLines(area,p);setTimeout(()=>{const next=area.querySelectorAll('.note-line-input')[i+1];if(next)next.focus()},10)}if(e.key==='Backspace'&&inp.value===''&&p.lines.length>1){e.preventDefault();p.lines.splice(i,1);renderNoteLines(area,p);setTimeout(()=>{const prev=area.querySelectorAll('.note-line-input')[Math.max(0,i-1)];if(prev)prev.focus()},10)}};area.appendChild(inp)})}
 
 const sv=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||''};
 const gv=(id)=>{const e=document.getElementById(id);return e?e.value.trim():''};
@@ -404,146 +519,36 @@ function colKos(){return[...document.querySelectorAll('#kr .kr')].map(r=>{const 
 function updKT(){const t=[...document.querySelectorAll('#kr .ba')].reduce((s,e)=>s+(parseFloat(e.value)||0),0);const el=document.getElementById('ktot');if(el)el.textContent=eur(t)}
 
 function saveCurrentPage(){ensureBuffer();const p=dayBuffer.pages[curPage];if(!p)return;if(p.type==='report'){p.ort=cOrt;p.von=gv('fv');p.bis=gv('fb');p.pau=gv('fp');p.proj=gv('fpr');p.baus=gv('fba');p.fahrten=collectFahrten();if(!p.fahrten.length)p.fahrten=[emFahrt()];p.tae=gv('fta');p.kos=colKos()}}
-async function save(){saveCurrentPage();flushBuffer();const b=document.getElementById('bs2');b.textContent='✓ Gespeichert';b.classList.add('saved');toast('Eintrag gespeichert');setTimeout(()=>{b.textContent='Speichern';b.classList.remove('saved')},2000);if(curView==='cal')renderCal()}
+async function save(){saveCurrentPage();flushBuffer();const b=document.getElementById('bs2');b.textContent='✓ Gespeichert';b.classList.add('saved');toast('Eintrag gespeichert & synchronisiert');setTimeout(()=>{b.textContent='Speichern';b.classList.remove('saved')},2000);if(curView==='cal')renderCal()}
 
 function openPM(){document.getElementById('pdf-modal').style.display='flex'}
 function closePM(){document.getElementById('pdf-modal').style.display='none'}
 function selPO(n){pdfOpt=n;[1,2,3].forEach(i=>document.getElementById('po'+i).classList.toggle('sel',i===n))}
-async function openPreview(){
-  closePM();saveCurrentPage();flushBuffer();const all=getAllDays();let title='';
-  if(pdfOpt===1){pvHTML=buildTagPDF(curDate,getDayData(curDate));title='Tagesbericht – '+fFull(curDate)}
-  else if(pdfOpt===2){pvHTML=buildWochePDF(curDate,all);title='Wochenbericht KW '+kwOf(s2d(curDate))}
-  else{const d=s2d(curDate);pvHTML=buildMonatPDF(curDate,all);title='Monatsbericht '+MO[d.getMonth()]+' '+d.getFullYear()}
-  document.getElementById('pvtitle').textContent=title;document.getElementById('pvscroll').innerHTML=pvHTML;document.getElementById('preview-bg').style.display='flex';
-}
+async function openPreview(){closePM();saveCurrentPage();flushBuffer();const all=getAllDays();let title='';if(pdfOpt===1){pvHTML=buildTagPDF(curDate,getDayData(curDate));title='Tagesbericht – '+fFull(curDate)}else if(pdfOpt===2){pvHTML=buildWochePDF(curDate,all);title='Wochenbericht KW '+kwOf(s2d(curDate))}else{const d=s2d(curDate);pvHTML=buildMonatPDF(curDate,all);title='Monatsbericht '+MO[d.getMonth()]+' '+d.getFullYear()}document.getElementById('pvtitle').textContent=title;document.getElementById('pvscroll').innerHTML=pvHTML;document.getElementById('preview-bg').style.display='flex'}
 function closePreview(){document.getElementById('preview-bg').style.display='none';document.getElementById('pvscroll').innerHTML=''}
 function doPrint(){const pr=document.getElementById('print-root');pr.innerHTML=pvHTML;requestAnimationFrame(()=>{window.print();setTimeout(()=>{pr.innerHTML=''},500)})}
 
-// ── PDF BUILDERS ──
 function buildTagPDF(date,rec){return(rec.pages||[emReport()]).map(migrateReport).map((p,i,a)=>p.type==='note'?buildNotePDF(p,i+1,date):buildReportPDF(p,i+1,a.length,date)).join('')}
-
 function buildReportPDF(p,pageNum,total,date){
   const mins=cms(p),bc=p.ort==='buero'?'pdf-bb':'pdf-bm',ortL=p.ort==='buero'?'Büro':p.ort==='montage'?'Montage':'—';
-  const koTot=(p.kos||[]).reduce((s,k)=>s+(parseFloat(k.b)||0),0);
-  const koRows=(p.kos||[]).map(k=>`<tr><td style="width:70%">${k.d||'—'}</td><td class="r">${eur(k.b)}</td></tr>`).join('');
-  const fahrten=(p.fahrten||[]).filter(f=>f.von||f.nach||f.abf||f.ank||f.km||f.kfz);
-  const totalKm=fahrten.reduce((s,f)=>s+(parseFloat(f.km)||0),0);
+  const koTot=(p.kos||[]).reduce((s,k)=>s+(parseFloat(k.b)||0),0);const koRows=(p.kos||[]).map(k=>`<tr><td style="width:70%">${k.d||'—'}</td><td class="r">${eur(k.b)}</td></tr>`).join('');
+  const fahrten=(p.fahrten||[]).filter(f=>f.von||f.nach||f.abf||f.ank||f.km||f.kfz);const totalKm=fahrten.reduce((s,f)=>s+(parseFloat(f.km)||0),0);
   let fahrtenHTML='';
-  if(fahrten.length){
-    const fRows=fahrten.map((f,i)=>`<tr><td style="text-align:center">${i+1}</td><td>${f.von||'—'}</td><td>${f.nach||'—'}</td><td class="r">${f.abf||'—'}</td><td class="r">${f.ank||'—'}</td><td class="r">${f.km?f.km+' km':'—'}</td><td>${f.kfz||'—'}</td></tr>`).join('');
-    fahrtenHTML=`<table class="pdf-table"><colgroup><col style="width:6%"><col style="width:18%"><col style="width:18%"><col style="width:11%"><col style="width:11%"><col style="width:13%"><col style="width:23%"></colgroup>
-      <thead><tr><th>Nr.</th><th>Von</th><th>Nach</th><th style="text-align:right">Abfahrt</th><th style="text-align:right">Ankunft</th><th style="text-align:right">KM</th><th>Fahrzeug</th></tr></thead>
-      <tbody>${fRows}<tr class="sum-row"><td colspan="5"><strong>Gesamt</strong></td><td class="r"><strong>${totalKm} km</strong></td><td></td></tr></tbody></table>`;
-  }
-  return`<div class="pdf-page">
-    <div class="pdf-h1">Stunden- &amp; Tätigkeitsbericht</div>
-    <div class="pdf-sub">${fFull(date)}${total>1?`  ·  Seite ${pageNum}/${total}`:''}&ensp;·&ensp;Erstellt: ${new Date().toLocaleDateString('de-DE')}</div>
-    <div class="pdf-g4">
-      <div class="pdf-box"><div class="pdf-lbl">Arbeitsort</div><div class="pdf-val"><span class="pdf-badge ${bc}">${ortL}</span></div></div>
-      <div class="pdf-box"><div class="pdf-lbl">Von – Bis</div><div class="pdf-val mono">${p.von||'—'} – ${p.bis||'—'}</div></div>
-      <div class="pdf-box"><div class="pdf-lbl">Pause</div><div class="pdf-val mono">${p.pau?p.pau+' Min':'—'}</div></div>
-      <div class="pdf-box"><div class="pdf-lbl">Arbeitszeit</div><div class="pdf-val mono">${mts(mins)}</div></div>
-    </div>
-    <div class="pdf-g2">
-      <div class="pdf-box"><div class="pdf-lbl">Projekt / Auftragsnr.</div><div class="pdf-val">${p.proj||'—'}</div></div>
-      <div class="pdf-box"><div class="pdf-lbl">Einsatzort / Baustelle</div><div class="pdf-val">${p.baus||'—'}</div></div>
-    </div>
-    ${fahrtenHTML}
-    <div class="pdf-tae"><div class="pdf-lbl">Tätigkeitsbeschreibung</div><div class="pdf-val">${p.tae||'—'}</div></div>
-    ${p.kos?.length?`<table class="pdf-table"><colgroup><col style="width:70%"><col style="width:30%"></colgroup><thead><tr><th>Kostenart / Beschreibung</th><th style="text-align:right">Betrag</th></tr></thead><tbody>${koRows}<tr class="sum-row"><td><strong>Gesamt</strong></td><td class="r"><strong>${eur(koTot)}</strong></td></tr></tbody></table>`:''}
-    <div class="pdf-sig"><div class="pdf-sig-line">Datum &amp; Unterschrift Mitarbeiter</div><div class="pdf-sig-line">Datum &amp; Unterschrift Vorgesetzter</div></div>
-  </div>`;
+  if(fahrten.length){const fRows=fahrten.map((f,i)=>`<tr><td style="text-align:center">${i+1}</td><td>${f.von||'—'}</td><td>${f.nach||'—'}</td><td class="r">${f.abf||'—'}</td><td class="r">${f.ank||'—'}</td><td class="r">${f.km?f.km+' km':'—'}</td><td>${f.kfz||'—'}</td></tr>`).join('');fahrtenHTML=`<table class="pdf-table"><colgroup><col style="width:6%"><col style="width:18%"><col style="width:18%"><col style="width:11%"><col style="width:11%"><col style="width:13%"><col style="width:23%"></colgroup><thead><tr><th>Nr.</th><th>Von</th><th>Nach</th><th style="text-align:right">Abfahrt</th><th style="text-align:right">Ankunft</th><th style="text-align:right">KM</th><th>Fahrzeug</th></tr></thead><tbody>${fRows}<tr class="sum-row"><td colspan="5"><strong>Gesamt</strong></td><td class="r"><strong>${totalKm} km</strong></td><td></td></tr></tbody></table>`}
+  return`<div class="pdf-page"><div class="pdf-h1">Stunden- &amp; Tätigkeitsbericht</div><div class="pdf-sub">${fFull(date)}${total>1?`  ·  Seite ${pageNum}/${total}`:''}&ensp;·&ensp;Erstellt: ${new Date().toLocaleDateString('de-DE')}</div><div class="pdf-g4"><div class="pdf-box"><div class="pdf-lbl">Arbeitsort</div><div class="pdf-val"><span class="pdf-badge ${bc}">${ortL}</span></div></div><div class="pdf-box"><div class="pdf-lbl">Von – Bis</div><div class="pdf-val mono">${p.von||'—'} – ${p.bis||'—'}</div></div><div class="pdf-box"><div class="pdf-lbl">Pause</div><div class="pdf-val mono">${p.pau?p.pau+' Min':'—'}</div></div><div class="pdf-box"><div class="pdf-lbl">Arbeitszeit</div><div class="pdf-val mono">${mts(mins)}</div></div></div><div class="pdf-g2"><div class="pdf-box"><div class="pdf-lbl">Projekt / Auftragsnr.</div><div class="pdf-val">${p.proj||'—'}</div></div><div class="pdf-box"><div class="pdf-lbl">Einsatzort / Baustelle</div><div class="pdf-val">${p.baus||'—'}</div></div></div>${fahrtenHTML}<div class="pdf-tae"><div class="pdf-lbl">Tätigkeitsbeschreibung</div><div class="pdf-val">${p.tae||'—'}</div></div>${p.kos?.length?`<table class="pdf-table"><colgroup><col style="width:70%"><col style="width:30%"></colgroup><thead><tr><th>Kostenart / Beschreibung</th><th style="text-align:right">Betrag</th></tr></thead><tbody>${koRows}<tr class="sum-row"><td><strong>Gesamt</strong></td><td class="r"><strong>${eur(koTot)}</strong></td></tr></tbody></table>`:''}<div class="pdf-sig"><div class="pdf-sig-line">Datum &amp; Unterschrift Mitarbeiter</div><div class="pdf-sig-line">Datum &amp; Unterschrift Vorgesetzter</div></div></div>`;
 }
-
 function buildNotePDF(p,pn,date){const lines=p.lines||[],filled=lines.map(l=>`<div class="pdf-note-line">${l||''}</div>`).join(''),rem=Math.max(0,27-lines.length),empty=Array(rem).fill('<div class="pdf-note-empty"></div>').join('');return`<div class="pdf-note-page"><div class="pdf-note-title">${p.title||'Notizseite'}</div><div class="pdf-note-sub">${fFull(date||curDate)} &ensp;·&ensp; Seite ${pn} &ensp;·&ensp; Erstellt: ${new Date().toLocaleDateString('de-DE')}</div>${filled}${empty}</div>`}
+function buildWochePDF(date,all){const d=s2d(date),dow=(d.getDay()+6)%7,mon=d2s(new Date(d.getFullYear(),d.getMonth(),d.getDate()-dow)),days=Array.from({length:7},(_,i)=>addD(mon,i));const em2=Object.fromEntries(all.map(e=>[e.date,e]));let rows='',thMin=0,tKm=0,tKo=0;days.forEach(ds=>{const rec=em2[ds],d2=s2d(ds),we=d2.getDay()===0||d2.getDay()===6;const rps=(rec?.pages||[]).filter(p=>p.type==='report').map(migrateReport);const mins=rps.reduce((s,p)=>s+cms(p),0),km=rps.reduce((s,p)=>s+getPageKm(p),0),ko=rps.reduce((s,p)=>s+(p.kos||[]).reduce((ss,k)=>ss+(parseFloat(k.b)||0),0),0);const ort=[...new Set(rps.map(p=>p.ort).filter(Boolean))].map(o=>o==='buero'?'Büro':'Montage').join('+')||'—';const proj=[...new Set(rps.map(p=>p.proj).filter(Boolean))].join(', ')||'—';const tae=[...new Set(rps.map(p=>p.tae).filter(Boolean))].join(' / ')||'—';thMin+=mins;tKm+=km;tKo+=ko;rows+=`<tr class="${we?'we-row':''}"><td style="white-space:nowrap"><strong>${d2.getDate()}. ${MOS[d2.getMonth()]}</strong><br><span style="font-size:6pt;color:#888">${DF[d2.getDay()]}</span></td><td>${ort}</td><td>${proj.length>18?proj.slice(0,16)+'…':proj}</td><td class="r">${mts(mins)}</td><td class="r">${km?km+' km':'—'}</td><td class="r">${ko?eur(ko):'—'}</td><td style="font-size:7pt">${tae.length>30?tae.slice(0,28)+'…':tae}</td></tr>`});return`<div class="pdf-page"><div class="pdf-h1">Wochenbericht – KW ${kwOf(s2d(mon))}</div><div class="pdf-sub">${fFull(mon)} bis ${fFull(days[6])}&ensp;·&ensp;Erstellt: ${new Date().toLocaleDateString('de-DE')}</div><div class="pdf-summary"><div class="pdf-sbox"><div class="pdf-sv">${mts(thMin)}</div><div class="pdf-sl">Arbeitsstunden</div></div><div class="pdf-sbox"><div class="pdf-sv">${tKm?tKm+' km':'—'}</div><div class="pdf-sl">Kilometer</div></div><div class="pdf-sbox"><div class="pdf-sv">${tKo?eur(tKo):'—'}</div><div class="pdf-sl">Kosten gesamt</div></div></div><table class="pdf-table"><colgroup><col style="width:10%"><col style="width:10%"><col style="width:16%"><col style="width:11%"><col style="width:11%"><col style="width:13%"><col style="width:29%"></colgroup><thead><tr><th>Tag</th><th>Ort</th><th>Projekt</th><th style="text-align:right">Stunden</th><th style="text-align:right">KM</th><th style="text-align:right">Kosten</th><th>Tätigkeit</th></tr></thead><tbody>${rows}<tr class="sum-row"><td colspan="3"><strong>Gesamt</strong></td><td class="r"><strong>${mts(thMin)}</strong></td><td class="r"><strong>${tKm?tKm+' km':'—'}</strong></td><td class="r"><strong>${tKo?eur(tKo):'—'}</strong></td><td></td></tr></tbody></table><div class="pdf-sig" style="margin-top:8mm"><div class="pdf-sig-line">Datum &amp; Unterschrift Mitarbeiter</div><div class="pdf-sig-line">Datum &amp; Unterschrift Vorgesetzter</div></div></div>`}
+function buildMonatPDF(date,all){const d=s2d(date),mk=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;const recs=all.filter(e=>e.date.startsWith(mk)).sort((a,b)=>a.date.localeCompare(b.date));let rows='',thMin=0,tKm=0,tKo=0,tBd=0,tMd=0;recs.forEach(rec=>{const d2=s2d(rec.date);const rps=(rec.pages||[]).filter(p=>p.type==='report').map(migrateReport);const mins=rps.reduce((s,p)=>s+cms(p),0),km=rps.reduce((s,p)=>s+getPageKm(p),0),ko=rps.reduce((s,p)=>s+(p.kos||[]).reduce((ss,k)=>ss+(parseFloat(k.b)||0),0),0);const orte=[...new Set(rps.map(p=>p.ort).filter(Boolean))];const ortL=orte.includes('buero')&&orte.includes('montage')?'B+M':orte.map(o=>o==='buero'?'Büro':'Mont.').join(',')||'—';const proj=[...new Set(rps.map(p=>p.proj).filter(Boolean))].join(', ')||'—';const tae=[...new Set(rps.map(p=>p.tae).filter(Boolean))].join(' / ')||'—';thMin+=mins;tKm+=km;tKo+=ko;if(orte.includes('buero'))tBd++;if(orte.includes('montage'))tMd++;rows+=`<tr><td style="white-space:nowrap">${d2.getDate()}. <span style="font-size:6pt;color:#888">${DF[d2.getDay()].slice(0,2)}</span></td><td>${ortL}</td><td>${proj.length>16?proj.slice(0,14)+'…':proj}</td><td class="r">${mts(mins)}</td><td class="r">${km?km+' km':'—'}</td><td class="r">${ko?eur(ko):'—'}</td><td style="font-size:7pt">${tae.length>32?tae.slice(0,30)+'…':tae}</td></tr>`});return`<div class="pdf-page"><div class="pdf-h1">Monatsbericht – ${MO[d.getMonth()]} ${d.getFullYear()}</div><div class="pdf-sub">Erstellt: ${new Date().toLocaleDateString('de-DE')}</div><div class="pdf-summary"><div class="pdf-sbox"><div class="pdf-sv">${recs.length}</div><div class="pdf-sl">Einträge</div></div><div class="pdf-sbox"><div class="pdf-sv">${mts(thMin)}</div><div class="pdf-sl">Arbeitsstunden</div></div><div class="pdf-sbox"><div class="pdf-sv">${tKm?tKm+' km':'—'}</div><div class="pdf-sl">Kilometer</div></div><div class="pdf-sbox"><div class="pdf-sv">${tKo?eur(tKo):'—'}</div><div class="pdf-sl">Kosten</div></div><div class="pdf-sbox"><div class="pdf-sv">${tBd}d</div><div class="pdf-sl">Büro-Tage</div></div><div class="pdf-sbox"><div class="pdf-sv">${tMd}d</div><div class="pdf-sl">Montage-Tage</div></div></div>${recs.length?`<table class="pdf-table"><colgroup><col style="width:9%"><col style="width:9%"><col style="width:14%"><col style="width:11%"><col style="width:11%"><col style="width:13%"><col style="width:33%"></colgroup><thead><tr><th>Tag</th><th>Ort</th><th>Projekt</th><th style="text-align:right">Stunden</th><th style="text-align:right">KM</th><th style="text-align:right">Kosten</th><th>Tätigkeit</th></tr></thead><tbody>${rows}<tr class="sum-row"><td colspan="3"><strong>Gesamt</strong></td><td class="r"><strong>${mts(thMin)}</strong></td><td class="r"><strong>${tKm?tKm+' km':'—'}</strong></td><td class="r"><strong>${tKo?eur(tKo):'—'}</strong></td><td></td></tr></tbody></table>`:`<p style="color:#999;font-style:italic;font-size:8pt;padding:4mm 0">Keine Einträge.</p>`}<div class="pdf-sig" style="margin-top:8mm"><div class="pdf-sig-line">Datum &amp; Unterschrift Mitarbeiter</div><div class="pdf-sig-line">Datum &amp; Unterschrift Vorgesetzter</div></div></div>`}
 
-function buildWochePDF(date,all){
-  const d=s2d(date),dow=(d.getDay()+6)%7,mon=d2s(new Date(d.getFullYear(),d.getMonth(),d.getDate()-dow)),days=Array.from({length:7},(_,i)=>addD(mon,i));
-  const em2=Object.fromEntries(all.map(e=>[e.date,e]));let rows='',thMin=0,tKm=0,tKo=0;
-  days.forEach(ds=>{const rec=em2[ds],d2=s2d(ds),we=d2.getDay()===0||d2.getDay()===6;
-    const rps=(rec?.pages||[]).filter(p=>p.type==='report').map(migrateReport);
-    const mins=rps.reduce((s,p)=>s+cms(p),0),km=rps.reduce((s,p)=>s+getPageKm(p),0),ko=rps.reduce((s,p)=>s+(p.kos||[]).reduce((ss,k)=>ss+(parseFloat(k.b)||0),0),0);
-    const ort=[...new Set(rps.map(p=>p.ort).filter(Boolean))].map(o=>o==='buero'?'Büro':'Montage').join('+')||'—';
-    const proj=[...new Set(rps.map(p=>p.proj).filter(Boolean))].join(', ')||'—';
-    const tae=[...new Set(rps.map(p=>p.tae).filter(Boolean))].join(' / ')||'—';
-    thMin+=mins;tKm+=km;tKo+=ko;
-    rows+=`<tr class="${we?'we-row':''}"><td style="white-space:nowrap"><strong>${d2.getDate()}. ${MOS[d2.getMonth()]}</strong><br><span style="font-size:6pt;color:#888">${DF[d2.getDay()]}</span></td><td>${ort}</td><td>${proj.length>18?proj.slice(0,16)+'…':proj}</td><td class="r">${mts(mins)}</td><td class="r">${km?km+' km':'—'}</td><td class="r">${ko?eur(ko):'—'}</td><td style="font-size:7pt">${tae.length>30?tae.slice(0,28)+'…':tae}</td></tr>`;
-  });
-  return`<div class="pdf-page"><div class="pdf-h1">Wochenbericht – KW ${kwOf(s2d(mon))}</div><div class="pdf-sub">${fFull(mon)} bis ${fFull(days[6])}&ensp;·&ensp;Erstellt: ${new Date().toLocaleDateString('de-DE')}</div>
-    <div class="pdf-summary"><div class="pdf-sbox"><div class="pdf-sv">${mts(thMin)}</div><div class="pdf-sl">Arbeitsstunden</div></div><div class="pdf-sbox"><div class="pdf-sv">${tKm?tKm+' km':'—'}</div><div class="pdf-sl">Kilometer</div></div><div class="pdf-sbox"><div class="pdf-sv">${tKo?eur(tKo):'—'}</div><div class="pdf-sl">Kosten gesamt</div></div></div>
-    <table class="pdf-table"><colgroup><col style="width:10%"><col style="width:10%"><col style="width:16%"><col style="width:11%"><col style="width:11%"><col style="width:13%"><col style="width:29%"></colgroup>
-    <thead><tr><th>Tag</th><th>Ort</th><th>Projekt</th><th style="text-align:right">Stunden</th><th style="text-align:right">KM</th><th style="text-align:right">Kosten</th><th>Tätigkeit</th></tr></thead>
-    <tbody>${rows}<tr class="sum-row"><td colspan="3"><strong>Gesamt</strong></td><td class="r"><strong>${mts(thMin)}</strong></td><td class="r"><strong>${tKm?tKm+' km':'—'}</strong></td><td class="r"><strong>${tKo?eur(tKo):'—'}</strong></td><td></td></tr></tbody></table>
-    <div class="pdf-sig" style="margin-top:8mm"><div class="pdf-sig-line">Datum &amp; Unterschrift Mitarbeiter</div><div class="pdf-sig-line">Datum &amp; Unterschrift Vorgesetzter</div></div></div>`;
-}
-
-function buildMonatPDF(date,all){
-  const d=s2d(date),mk=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-  const recs=all.filter(e=>e.date.startsWith(mk)).sort((a,b)=>a.date.localeCompare(b.date));
-  let rows='',thMin=0,tKm=0,tKo=0,tBd=0,tMd=0;
-  recs.forEach(rec=>{const d2=s2d(rec.date);const rps=(rec.pages||[]).filter(p=>p.type==='report').map(migrateReport);
-    const mins=rps.reduce((s,p)=>s+cms(p),0),km=rps.reduce((s,p)=>s+getPageKm(p),0),ko=rps.reduce((s,p)=>s+(p.kos||[]).reduce((ss,k)=>ss+(parseFloat(k.b)||0),0),0);
-    const orte=[...new Set(rps.map(p=>p.ort).filter(Boolean))];const ortL=orte.includes('buero')&&orte.includes('montage')?'B+M':orte.map(o=>o==='buero'?'Büro':'Mont.').join(',')||'—';
-    const proj=[...new Set(rps.map(p=>p.proj).filter(Boolean))].join(', ')||'—';const tae=[...new Set(rps.map(p=>p.tae).filter(Boolean))].join(' / ')||'—';
-    thMin+=mins;tKm+=km;tKo+=ko;if(orte.includes('buero'))tBd++;if(orte.includes('montage'))tMd++;
-    rows+=`<tr><td style="white-space:nowrap">${d2.getDate()}. <span style="font-size:6pt;color:#888">${DF[d2.getDay()].slice(0,2)}</span></td><td>${ortL}</td><td>${proj.length>16?proj.slice(0,14)+'…':proj}</td><td class="r">${mts(mins)}</td><td class="r">${km?km+' km':'—'}</td><td class="r">${ko?eur(ko):'—'}</td><td style="font-size:7pt">${tae.length>32?tae.slice(0,30)+'…':tae}</td></tr>`;
-  });
-  return`<div class="pdf-page"><div class="pdf-h1">Monatsbericht – ${MO[d.getMonth()]} ${d.getFullYear()}</div><div class="pdf-sub">Erstellt: ${new Date().toLocaleDateString('de-DE')}</div>
-    <div class="pdf-summary"><div class="pdf-sbox"><div class="pdf-sv">${recs.length}</div><div class="pdf-sl">Einträge</div></div><div class="pdf-sbox"><div class="pdf-sv">${mts(thMin)}</div><div class="pdf-sl">Arbeitsstunden</div></div><div class="pdf-sbox"><div class="pdf-sv">${tKm?tKm+' km':'—'}</div><div class="pdf-sl">Kilometer</div></div><div class="pdf-sbox"><div class="pdf-sv">${tKo?eur(tKo):'—'}</div><div class="pdf-sl">Kosten</div></div><div class="pdf-sbox"><div class="pdf-sv">${tBd}d</div><div class="pdf-sl">Büro-Tage</div></div><div class="pdf-sbox"><div class="pdf-sv">${tMd}d</div><div class="pdf-sl">Montage-Tage</div></div></div>
-    ${recs.length?`<table class="pdf-table"><colgroup><col style="width:9%"><col style="width:9%"><col style="width:14%"><col style="width:11%"><col style="width:11%"><col style="width:13%"><col style="width:33%"></colgroup>
-    <thead><tr><th>Tag</th><th>Ort</th><th>Projekt</th><th style="text-align:right">Stunden</th><th style="text-align:right">KM</th><th style="text-align:right">Kosten</th><th>Tätigkeit</th></tr></thead>
-    <tbody>${rows}<tr class="sum-row"><td colspan="3"><strong>Gesamt</strong></td><td class="r"><strong>${mts(thMin)}</strong></td><td class="r"><strong>${tKm?tKm+' km':'—'}</strong></td><td class="r"><strong>${tKo?eur(tKo):'—'}</strong></td><td></td></tr></tbody></table>`:`<p style="color:#999;font-style:italic;font-size:8pt;padding:4mm 0">Keine Einträge für diesen Monat.</p>`}
-    <div class="pdf-sig" style="margin-top:8mm"><div class="pdf-sig-line">Datum &amp; Unterschrift Mitarbeiter</div><div class="pdf-sig-line">Datum &amp; Unterschrift Vorgesetzter</div></div></div>`;
-}
-
-// ── CALENDAR ──
-async function renderCal(){
-  const td=tod(),all=getAllDays(),ed=new Set(all.map(e=>e.date));
-  document.getElementById('cml').textContent=`${MO[calM]} ${calY}`;
-  const dc=document.getElementById('cdays');dc.innerHTML='';const fd=new Date(calY,calM,1),off=(fd.getDay()+6)%7,dim=new Date(calY,calM+1,0).getDate();
-  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='cd emp';dc.appendChild(e)}
-  for(let dd=1;dd<=dim;dd++){const s=d2s(new Date(calY,calM,dd)),dow=new Date(calY,calM,dd).getDay();const e=document.createElement('div');e.className='cd'+(dow===0||dow===6?' we':'')+(s===td?' tod':'')+(ed.has(s)?' has':'')+(s===calSel?' sel':'');e.innerHTML=`<span class="cdn">${dd}</span><div class="cdd"></div>`;e.onclick=()=>{calSel=s;renderCal()};dc.appendChild(e)}
-  renderMStats(all,calY,calM);
-  if(calSel){const[sy,sm]=calSel.split('-').map(Number);if(sy===calY&&sm-1===calM){showCalInfo(calSel,all.find(e=>e.date===calSel))}else document.getElementById('cdi').style.display='none'}
-}
-function showCalInfo(s,rec){
-  const el=document.getElementById('cdi'),tl=document.getElementById('cdit'),gl=document.getElementById('cdig');tl.textContent=fFull(s);gl.innerHTML='';
-  const rps=(rec?.pages||[]).filter(p=>p.type==='report').map(migrateReport);
-  if(!rps.length||!rps[0].von){gl.innerHTML=`<div style="grid-column:1/-1;color:var(--text3);font-size:13px;padding:4px 0">Noch kein Eintrag.</div>`}
-  else{const tkm=rps.reduce((s,p)=>s+getPageKm(p),0),tko=rps.reduce((s,p)=>s+(p.kos||[]).reduce((ss,k)=>ss+(parseFloat(k.b)||0),0),0),allMin=rps.reduce((s,p)=>s+cms(p),0);
-    const orte=[...new Set(rps.map(p=>p.ort).filter(Boolean))].map(o=>o==='buero'?'Büro':'Montage').join('+')||'—';
-    const nF=rps.reduce((s,p)=>s+(p.fahrten||[]).filter(f=>f.von||f.nach||f.km).length,0);
-    [[`⏱`,mts(allMin),'Arbeitszeit'],[`📍`,orte,'Einsatzort'],[`🚗`,tkm?tkm+' km':'—',nF+' Fahrten'],[`💶`,tko?eur(tko):'—','Kosten']].forEach(([i,v,l])=>{gl.innerHTML+=`<div class="cst"><div class="csv">${i} ${v}</div><div class="csl">${l}</div></div>`})}
-  el.style.display='';
-}
-function renderMStats(all,y,m){
-  const mk=`${y}-${String(m+1).padStart(2,'0')}`,recs=all.filter(e=>e.date.startsWith(mk));let th=0,tkm=0,tko=0,bd=0,md=0;
-  recs.forEach(rec=>{(rec.pages||[]).filter(p=>p.type==='report').map(migrateReport).forEach(p=>{th+=cms(p);tkm+=getPageKm(p);(p.kos||[]).forEach(k=>tko+=parseFloat(k.b)||0)});const orte=(rec.pages||[]).filter(p=>p.type==='report').map(p=>p.ort).filter(Boolean);if(orte.includes('buero'))bd++;if(orte.includes('montage'))md++});
-  document.getElementById('cmsg').innerHTML=`<div class="cst"><div class="csv">${recs.length}</div><div class="csl">Einträge</div></div><div class="cst"><div class="csv">${mts(th)}</div><div class="csl">Arbeitsstunden</div></div><div class="cst"><div class="csv">${tkm} km</div><div class="csl">Kilometer</div></div><div class="cst"><div class="csv">${eur(tko)}</div><div class="csl">Kosten</div></div><div class="cst"><div class="csv">${bd}d</div><div class="csl">Büro-Tage</div></div><div class="cst"><div class="csv">${md}d</div><div class="csl">Montage-Tage</div></div>`;
-}
+async function renderCal(){const td=tod(),all=getAllDays(),ed=new Set(all.map(e=>e.date));document.getElementById('cml').textContent=`${MO[calM]} ${calY}`;const dc=document.getElementById('cdays');dc.innerHTML='';const fd=new Date(calY,calM,1),off=(fd.getDay()+6)%7,dim=new Date(calY,calM+1,0).getDate();for(let i=0;i<off;i++){const e=document.createElement('div');e.className='cd emp';dc.appendChild(e)}for(let dd=1;dd<=dim;dd++){const s=d2s(new Date(calY,calM,dd)),dow=new Date(calY,calM,dd).getDay();const e=document.createElement('div');e.className='cd'+(dow===0||dow===6?' we':'')+(s===td?' tod':'')+(ed.has(s)?' has':'')+(s===calSel?' sel':'');e.innerHTML=`<span class="cdn">${dd}</span><div class="cdd"></div>`;e.onclick=()=>{calSel=s;renderCal()};dc.appendChild(e)}renderMStats(all,calY,calM);if(calSel){const[sy,sm]=calSel.split('-').map(Number);if(sy===calY&&sm-1===calM){showCalInfo(calSel,all.find(e=>e.date===calSel))}else document.getElementById('cdi').style.display='none'}}
+function showCalInfo(s,rec){const el=document.getElementById('cdi'),tl=document.getElementById('cdit'),gl=document.getElementById('cdig');tl.textContent=fFull(s);gl.innerHTML='';const rps=(rec?.pages||[]).filter(p=>p.type==='report').map(migrateReport);if(!rps.length||!rps[0].von){gl.innerHTML=`<div style="grid-column:1/-1;color:var(--text3);font-size:13px;padding:4px 0">Noch kein Eintrag.</div>`}else{const tkm=rps.reduce((s,p)=>s+getPageKm(p),0),tko=rps.reduce((s,p)=>s+(p.kos||[]).reduce((ss,k)=>ss+(parseFloat(k.b)||0),0),0),allMin=rps.reduce((s,p)=>s+cms(p),0);const orte=[...new Set(rps.map(p=>p.ort).filter(Boolean))].map(o=>o==='buero'?'Büro':'Montage').join('+')||'—';const nF=rps.reduce((s,p)=>s+(p.fahrten||[]).filter(f=>f.von||f.nach||f.km).length,0);[[`⏱`,mts(allMin),'Arbeitszeit'],[`📍`,orte,'Einsatzort'],[`🚗`,tkm?tkm+' km':'—',nF+' Fahrten'],[`💶`,tko?eur(tko):'—','Kosten']].forEach(([i,v,l])=>{gl.innerHTML+=`<div class="cst"><div class="csv">${i} ${v}</div><div class="csl">${l}</div></div>`})}el.style.display=''}
+function renderMStats(all,y,m){const mk=`${y}-${String(m+1).padStart(2,'0')}`,recs=all.filter(e=>e.date.startsWith(mk));let th=0,tkm=0,tko=0,bd=0,md=0;recs.forEach(rec=>{(rec.pages||[]).filter(p=>p.type==='report').map(migrateReport).forEach(p=>{th+=cms(p);tkm+=getPageKm(p);(p.kos||[]).forEach(k=>tko+=parseFloat(k.b)||0)});const orte=(rec.pages||[]).filter(p=>p.type==='report').map(p=>p.ort).filter(Boolean);if(orte.includes('buero'))bd++;if(orte.includes('montage'))md++});document.getElementById('cmsg').innerHTML=`<div class="cst"><div class="csv">${recs.length}</div><div class="csl">Einträge</div></div><div class="cst"><div class="csv">${mts(th)}</div><div class="csl">Arbeitsstunden</div></div><div class="cst"><div class="csv">${tkm} km</div><div class="csl">Kilometer</div></div><div class="cst"><div class="csv">${eur(tko)}</div><div class="csl">Kosten</div></div><div class="cst"><div class="csv">${bd}d</div><div class="csl">Büro-Tage</div></div><div class="cst"><div class="csv">${md}d</div><div class="csl">Montage-Tage</div></div>`}
 function calShift(n){calM+=n;if(calM>11){calM=0;calY++}if(calM<0){calM=11;calY--}renderCal()}
 function openFromCal(){if(!calSel)return;saveCurrentPage();flushBuffer();dayBuffer=null;curDate=calSel;curPage=0;switchView('form')}
-
-async function renderList(){
-  const all=getAllDays(),c=document.getElementById('lc');
-  if(!all.length){c.innerHTML=`<div class="empty"><div class="ei">📂</div><p>Noch keine Einträge.<br>Tippe auf ✏️ um loszulegen.</p></div>`;return}
-  all.sort((a,b)=>b.date.localeCompare(a.date));const g={};all.forEach(r=>{const k=r.date.slice(0,7);if(!g[k])g[k]=[];g[k].push(r)});c.innerHTML='';
-  for(const[mk,recs]of Object.entries(g)){const[y,m]=mk.split('-').map(Number);const h=document.createElement('div');h.className='mhdr';h.textContent=`${MO[m-1]} ${y}`;c.appendChild(h);
-    recs.forEach(rec=>{const d=s2d(rec.date),rps=(rec.pages||[]).filter(p=>p.type==='report').map(migrateReport),rp0=rps[0]||{};
-      const orte=[...new Set(rps.map(p=>p.ort).filter(Boolean))];let bc='',bt='';
-      if(orte.includes('buero')&&orte.includes('montage')){bc='bx';bt='Büro+Mont.'}else if(orte.includes('buero')){bc='bb';bt='Büro'}else if(orte.includes('montage')){bc='bm';bt='Montage'}
-      const sub=[];if(rp0.von&&rp0.bis)sub.push(`${rp0.von}–${rp0.bis}`);if(rp0.proj)sub.push(rp0.proj);if(rp0.baus)sub.push(rp0.baus);
-      const nf=rps.reduce((s,p)=>s+(p.fahrten||[]).filter(f=>f.von||f.nach||f.km).length,0);if(nf>1)sub.push(`${nf} Fahrten`);
-      if((rec.pages||[]).length>1)sub.push(`${(rec.pages||[]).length} Seiten`);
-      const item=document.createElement('div');item.className='li';
-      item.innerHTML=`<div class="lid"><div class="dn">${d.getDate()}</div><div class="dw">${DW[d.getDay()]}</div></div><div class="lii"><div class="lt">${DF[d.getDay()]}, ${d.getDate()}. ${MO[d.getMonth()]}</div><div class="ls">${sub.join(' · ')||'Kein Eintrag'}</div></div>${bt?`<div class="bdg ${bc}">${bt}</div>`:''}`;
-      item.onclick=()=>{saveCurrentPage();flushBuffer();dayBuffer=null;curDate=rec.date;curPage=0;switchView('form')};c.appendChild(item)})
-  }
-}
-
+async function renderList(){const all=getAllDays(),c=document.getElementById('lc');if(!all.length){c.innerHTML=`<div class="empty"><div class="ei">📂</div><p>Noch keine Einträge.<br>Tippe auf ✏️ um loszulegen.</p></div>`;return}all.sort((a,b)=>b.date.localeCompare(a.date));const g={};all.forEach(r=>{const k=r.date.slice(0,7);if(!g[k])g[k]=[];g[k].push(r)});c.innerHTML='';for(const[mk,recs]of Object.entries(g)){const[y,m]=mk.split('-').map(Number);const h=document.createElement('div');h.className='mhdr';h.textContent=`${MO[m-1]} ${y}`;c.appendChild(h);recs.forEach(rec=>{const d=s2d(rec.date),rps=(rec.pages||[]).filter(p=>p.type==='report').map(migrateReport),rp0=rps[0]||{};const orte=[...new Set(rps.map(p=>p.ort).filter(Boolean))];let bc='',bt='';if(orte.includes('buero')&&orte.includes('montage')){bc='bx';bt='Büro+Mont.'}else if(orte.includes('buero')){bc='bb';bt='Büro'}else if(orte.includes('montage')){bc='bm';bt='Montage'}const sub=[];if(rp0.von&&rp0.bis)sub.push(`${rp0.von}–${rp0.bis}`);if(rp0.proj)sub.push(rp0.proj);if(rp0.baus)sub.push(rp0.baus);const nf=rps.reduce((s,p)=>s+(p.fahrten||[]).filter(f=>f.von||f.nach||f.km).length,0);if(nf>1)sub.push(`${nf} Fahrten`);if((rec.pages||[]).length>1)sub.push(`${(rec.pages||[]).length} Seiten`);const item=document.createElement('div');item.className='li';item.innerHTML=`<div class="lid"><div class="dn">${d.getDate()}</div><div class="dw">${DW[d.getDay()]}</div></div><div class="lii"><div class="lt">${DF[d.getDay()]}, ${d.getDate()}. ${MO[d.getMonth()]}</div><div class="ls">${sub.join(' · ')||'Kein Eintrag'}</div></div>${bt?`<div class="bdg ${bc}">${bt}</div>`:''}`;item.onclick=()=>{saveCurrentPage();flushBuffer();dayBuffer=null;curDate=rec.date;curPage=0;switchView('form')};c.appendChild(item)})}}
 function switchView(v){curView=v;document.getElementById('vf').style.display=v==='form'?'':'none';document.getElementById('vc').style.display=v==='cal'?'':'none';document.getElementById('vl').style.display=v==='list'?'':'none';document.getElementById('sb').style.display=v==='form'?'':'none';document.getElementById('tsub').textContent=v==='form'?'Tageserfassung':v==='cal'?'Kalenderübersicht':'Alle Einträge';if(v==='list')renderList();if(v==='form')loadForm();if(v==='cal')renderCal()}
 let tt;function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2400)}
-
 (function init(){curDate=tod();const n=new Date();calY=n.getFullYear();calM=n.getMonth();calSel=curDate;switchView('form')})();
 </script>
 </body>
