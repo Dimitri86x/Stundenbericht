@@ -295,18 +295,35 @@ let fbData = {};  // local mirror of firebase data
 let fbReady = false;
 let currentUser = null;
 
+// Handle redirect result (for PWA/mobile login)
+auth.getRedirectResult().then(result => {
+  if (result.user) console.log('Redirect Login OK:', result.user.displayName);
+}).catch(err => {
+  if (err.code && err.code !== 'auth/credential-already-in-use') {
+    console.error('Redirect Login Fehler:', err);
+  }
+});
+
+function isPWAorMobile() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  return isStandalone || isMobile;
+}
+
 // ── AUTH ──
 function doLogin(){
   const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).catch(e=>{
-    // Fallback for mobile: use redirect
-    if(e.code==='auth/popup-blocked'||e.code==='auth/popup-closed-by-user'){
+  if (isPWAorMobile()) {
+    // PWA/Mobile: Redirect statt Popup
+    auth.signInWithRedirect(provider);
+  } else {
+    // Desktop: Popup mit Fallback auf Redirect
+    auth.signInWithPopup(provider).catch(e=>{
+      console.error('Popup fehlgeschlagen, versuche Redirect:', e);
       auth.signInWithRedirect(provider);
-    } else {
-      toast('Anmeldung fehlgeschlagen');
-      console.error(e);
-    }
-  });
+    });
+  }
 }
 function doLogout(){
   auth.signOut();
