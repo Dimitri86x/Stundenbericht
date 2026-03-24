@@ -314,16 +314,7 @@ function isPWAorMobile() {
 // ── AUTH ──
 function doLogin(){
   const provider = new firebase.auth.GoogleAuthProvider();
-  if (isPWAorMobile()) {
-    // PWA/Mobile: Redirect statt Popup
-    auth.signInWithRedirect(provider);
-  } else {
-    // Desktop: Popup mit Fallback auf Redirect
-    auth.signInWithPopup(provider).catch(e=>{
-      console.error('Popup fehlgeschlagen, versuche Redirect:', e);
-      auth.signInWithRedirect(provider);
-    });
-  }
+  auth.signInWithRedirect(provider);
 }
 function doLogout(){
   auth.signOut();
@@ -348,17 +339,39 @@ auth.onAuthStateChanged(user=>{
     // Setup realtime database listener
     dbRef=db.ref('users/'+user.uid+'/days');
     setSyncStatus('syncing');
-    dbRef.on('value',snap=>{
-      fbData=snap.val()||{};
-      // Also update localStorage as cache
-      try{localStorage.setItem(SK,JSON.stringify(fbData))}catch(e){}
-      fbReady=true;
-      setSyncStatus('online');
-      // Refresh current view
-      dayBuffer=null;
-      if(curView==='form')loadForm();
-      else if(curView==='cal')renderCal();
-      else if(curView==='list')renderList();
+    // First check: if Firebase is empty, push local data UP
+    dbRef.once('value').then(snap=>{
+      const fbVal=snap.val();
+      let localData={};
+      try{localData=JSON.parse(localStorage.getItem(SK)||'{}');}catch(e){}
+      const localHasData=Object.keys(localData).length>0;
+      const fbHasData=fbVal&&Object.keys(fbVal).length>0;
+
+      if(!fbHasData&&localHasData){
+        // Firebase leer, lokale Daten vorhanden → hochladen
+        console.log('Firebase leer, lade lokale Daten hoch...');
+        dbRef.set(localData).then(()=>{
+          console.log('Lokale Daten erfolgreich hochgeladen');
+        });
+      } else if(fbHasData&&localHasData){
+        // Beide haben Daten → merge (Firebase gewinnt bei gleichem Datum)
+        const merged={...localData,...fbVal};
+        if(Object.keys(merged).length>Object.keys(fbVal).length){
+          dbRef.set(merged);
+        }
+      }
+
+      // Now setup realtime listener
+      dbRef.on('value',snap2=>{
+        fbData=snap2.val()||{};
+        try{localStorage.setItem(SK,JSON.stringify(fbData))}catch(e){}
+        fbReady=true;
+        setSyncStatus('online');
+        dayBuffer=null;
+        if(curView==='form')loadForm();
+        else if(curView==='cal')renderCal();
+        else if(curView==='list')renderList();
+      });
     });
   } else {
     document.getElementById('login-overlay').style.display='flex';
